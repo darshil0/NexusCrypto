@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+:root {
+  --bg-sleek-main: #0B0E11;
+  --bg-sleek-card: #161A1E;
+  --bg-sleek-input: #0B0E11;
+  --border-sleek: #1F242B;
+}
+
+body {
+  background-color: #0B0E11;
+  color: #F3F4F6;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Custom scrollbars for clean sleek crypto UI */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0B0E11;
+}
+::-webkit-scrollbar-thumb {
+  background: #232932;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #374151;
+}

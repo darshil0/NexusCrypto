@@ -1,0 +1,6 @@
+{
+  "name": "NexusCrypto",
+  "description": "A polished, responsive demo crypto paper trading platform and learning hub featuring simulated markets, live-feel order books, wallet simulator, portfolio tracker, and comprehensive risk disclosures.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
