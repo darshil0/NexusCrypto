@@ -10,7 +10,8 @@ export const RecentTrades: React.FC<RecentTradesProps> = ({ currentPrice, baseAs
   // Deterministic trade feed
   const trades = useMemo(() => {
     const list = [];
-    const now = Date.now();
+    // Fixed reference timestamp for deterministic rendering
+    const now = 1735689600000;
     for (let i = 0; i < 14; i++) {
       const isBuy = Math.sin(i * 3.7 + currentPrice) > -0.1;
       const priceOffset = (Math.cos(i * 2.1) * 0.0008) * currentPrice;

@@ -43,8 +43,9 @@ describe('Calculations Utility', () => {
     expect(() => calculateConvertQuote('BTC', 'ETH', 1, prices)).toThrow('Invalid asset pricing for conversion');
   });
 
-  it('validates balance accurately', () => {
+  it('validates balance accurately with floating-point epsilon tolerance', () => {
     expect(validateBalance(100, 50).valid).toBe(true);
+    expect(validateBalance(100, 100.00000000000001).valid).toBe(true);
     expect(validateBalance(100, 150).valid).toBe(false);
     expect(validateBalance(100, 150).shortfall).toBe(50);
   });
@@ -73,6 +74,32 @@ describe('Calculations Utility', () => {
     const summary = calculatePortfolioSummary(balances as any, assets as any);
     expect(summary.totalValueUSD).toBe(66000);
     expect(summary.totalPnLUSD).toBe(5000);
+  });
+
+  it('handles 0 avgBuyPrice cost basis correctly without replacing with current price', () => {
+    const balances = {
+      BTC: { symbol: 'BTC', name: 'Bitcoin', amount: 1, avgBuyPrice: 0 },
+    };
+    const assets = {
+      BTC: {
+        symbol: 'BTC',
+        name: 'Bitcoin',
+        price: 50000,
+        change24h: 0,
+        high24h: 50000,
+        low24h: 50000,
+        volume24h: 1000,
+        marketCap: 1000000,
+        sparkline: [50000],
+        category: 'Layer 1',
+        description: 'Bitcoin',
+        color: '#F7931A',
+      },
+    };
+    const summary = calculatePortfolioSummary(balances as any, assets as any);
+    expect(summary.totalValueUSD).toBe(50000);
+    expect(summary.totalPnLUSD).toBe(50000);
+    expect(summary.breakdown[0].avgBuyPrice).toBe(0);
   });
 });
 
