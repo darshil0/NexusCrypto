@@ -147,6 +147,15 @@ export const SettingsSecurityPage: React.FC = () => {
                 >
                   <Sun className="w-3.5 h-3.5" /> Light
                 </button>
+                <button
+                  type="button"
+                  onClick={() => updateSettings({ theme: 'system' })}
+                  className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${
+                    settings.theme === 'system' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-400'
+                  }`}
+                >
+                  <Laptop className="w-3.5 h-3.5" /> System
+                </button>
               </div>
             </div>
 
