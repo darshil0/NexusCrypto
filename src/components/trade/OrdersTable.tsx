@@ -17,6 +17,7 @@ export const OrdersTable: React.FC = () => {
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800 bg-[#0B0E11]">
         <div className="flex items-center gap-2">
           <button
+            type="button"
             onClick={() => setTab('open')}
             className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
               tab === 'open'
@@ -27,6 +28,7 @@ export const OrdersTable: React.FC = () => {
             Open Orders ({openOrders.length})
           </button>
           <button
+            type="button"
             onClick={() => setTab('history')}
             className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
               tab === 'history'

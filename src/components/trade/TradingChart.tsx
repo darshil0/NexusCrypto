@@ -216,6 +216,7 @@ export const TradingChart: React.FC<TradingChartProps> = ({
           {/* Chart Type Toggle */}
           <div className="flex items-center bg-[#161A1E] rounded-xl p-0.5 border border-gray-800 text-xs">
             <button
+              type="button"
               onClick={() => setChartType('candle')}
               className={`px-2.5 py-1 rounded-lg transition-colors ${
                 chartType === 'candle' ? 'bg-indigo-600 text-white font-medium shadow-sm' : 'text-gray-400 hover:text-white'
@@ -224,6 +225,7 @@ export const TradingChart: React.FC<TradingChartProps> = ({
               Candles
             </button>
             <button
+              type="button"
               onClick={() => setChartType('line')}
               className={`px-2.5 py-1 rounded-lg transition-colors ${
                 chartType === 'line' ? 'bg-indigo-600 text-white font-medium shadow-sm' : 'text-gray-400 hover:text-white'
@@ -235,6 +237,7 @@ export const TradingChart: React.FC<TradingChartProps> = ({
 
           {/* Indicator MA Toggle */}
           <button
+            type="button"
             onClick={() => setShowMA(!showMA)}
             className={`text-xs px-2.5 py-1 rounded-lg border transition-colors ${
               showMA
@@ -250,6 +253,7 @@ export const TradingChart: React.FC<TradingChartProps> = ({
             {(['24H', '7D', '30D', '1Y'] as const).map((tf) => (
               <button
                 key={tf}
+                type="button"
                 id={`btn-timeframe-${tf}`}
                 onClick={() => setTimeframe(tf)}
                 className={`px-2.5 py-1 rounded-lg transition-colors ${

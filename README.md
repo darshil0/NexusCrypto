@@ -43,8 +43,8 @@ NexusCrypto is a modern, frontend-only, browser-based paper trading sandbox that
 git clone https://github.com/darshil0/nexus-crypto.git
 cd nexus-crypto
 
-# Install dependencies
-npm install
+# Install dependencies reproducibly using the lockfile
+npm ci
 
 # Start the local development server (localhost:3000)
 npm run dev
@@ -58,6 +58,7 @@ npm run dev
 | `npm run typecheck` | Runs TypeScript compiler (`tsc --noEmit`) to verify type safety |
 | `npm run lint` | Runs ESLint across all codebase files |
 | `npm run test` | Executes unit test suite using Vitest |
+| `npm run test -- --coverage` | Executes test suite with V8 code coverage report |
 | `npm run build` | Builds optimized static production distribution output to `out/` |
 | `npm run preview` | Previews the production static build locally |
 | `npm run clean` | Cleans build artifacts and dist directories |
@@ -150,9 +151,12 @@ nexus-crypto/
 1. Fork the repository & create a feature branch (`git checkout -b feature/amazing-feature`).
 2. Run quality checks before submitting PRs:
    ```bash
-   npm run typecheck
+   npm ci
+   npm audit --audit-level=high
    npm run lint
-   npm run test
+   npm run typecheck
+   npm run test -- --coverage
+   npm run build
    ```
 3. Commit your changes and open a Pull Request.
 
