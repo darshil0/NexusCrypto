@@ -158,6 +158,13 @@ export const ERROR_CATALOG: Record<AppErrorCode, AppError> = {
     recoverable: true,
     action: 'dismiss',
   },
+  POSITIVE_VALUE_REQUIRED: {
+    code: 'POSITIVE_VALUE_REQUIRED',
+    title: 'Positive Value Required',
+    message: 'Amount must be greater than zero.',
+    recoverable: true,
+    action: 'dismiss',
+  },
   ZERO_VALUE: {
     code: 'ZERO_VALUE',
     title: 'Zero Amount',

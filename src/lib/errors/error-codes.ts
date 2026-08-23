@@ -19,6 +19,7 @@ export type AppErrorCode =
   | 'REQUIRED_FIELD'
   | 'INVALID_NUMBER'
   | 'NEGATIVE_VALUE'
+  | 'POSITIVE_VALUE_REQUIRED'
   | 'ZERO_VALUE'
   | 'TOO_MANY_DECIMALS'
   | 'VALUE_TOO_SMALL'
@@ -41,6 +42,8 @@ export type AppErrorCode =
   | 'WITHDRAWAL_FEE_EXCEEDS_BALANCE'
   | 'SUPPORT_TICKET_CREATE_FAILED'
   | 'BUILD_ERROR';
+
+export { createAppError, ERROR_CATALOG } from './error-messages';
 
 export interface AppError {
   code: AppErrorCode;
