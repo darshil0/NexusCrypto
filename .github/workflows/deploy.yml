@@ -13,15 +13,14 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: github-pages
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
+    name: Build static site
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,33 +29,49 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: npm
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Lint
-        run: npm run lint
+      - name: Run lint
+        run: npm run lint --if-present
 
-      - name: Run Typecheck
-        run: npm run typecheck
+      - name: Run typecheck
+        run: npm run typecheck --if-present
 
-      - name: Run Unit Tests
-        run: npm run test
+      - name: Run unit tests
+        run: npm run test --if-present
 
       - name: Build static export
         env:
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
         run: npm run build
 
-      - name: Setup Pages
+      - name: Verify static export
+        run: |
+          test -d out
+          test -f out/index.html
+
+      - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './out'
+          path: ./out
 
-      - name: Deploy to GitHub Pages
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy GitHub Pages artifact
         id: deployment
         uses: actions/deploy-pages@v4
