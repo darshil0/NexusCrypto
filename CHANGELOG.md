@@ -5,12 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 2026-08-23
+## [Unreleased]
+
+### Added
+- **Interactive Paper Trading Sandbox**: Full simulation suite supporting Market, Limit, and Stop Loss orders, instant asset conversion, portfolio management, wallet faucet, and transaction ledger.
+- **Market Heatmap & Analytics**: Dynamic market visualization dashboard with live price tracking, 24h change indicators, volume metrics, order book visualization, and recent trade history.
+- **Learn Hub & Micro-Quizzes**: Educational module containing interactive guides, cryptocurrency tutorials, and micro-quizzes to test trading knowledge.
+- **Watchlists & Custom Price Alerts**: Personalized asset tracking and alert notification system for monitoring crypto market movements.
+- **SafeStorage Fallback System**: High-reliability browser storage abstraction (`safeStorage`) that seamlessly falls back to in-memory storage if `localStorage` is restricted or quota is exceeded.
+- **Comprehensive Unit Test Suite**: Vitest tests covering financial calculations, safe storage operations, validation logic, formatters, and global `DemoContext` state operations.
+- **GitHub Actions Deployment Workflows**: Automated CI/CD pipeline (`.github/workflows/deploy.yml`) supporting build verification, linting, typechecking, testing, and deployment to GitHub Pages.
+
+### Changed
+- **Client Router Enhancements**: Upgraded lightweight client-side router with robust path normalization, `NEXT_PUBLIC_BASE_PATH` / `BASE_PATH` subpath resolution, and hash navigation fallback support.
+- **UI & Accessibility Improvements**: Enhanced modals with `Escape` key handling, `role="dialog"`, `aria-modal`, and focus trap attributes. Added focusable "Skip to content" anchor for keyboard navigation.
+- **Project Structure & Dependencies**: Cleaned up `package.json` dependencies, standardized package name to `nexus-crypto`, and configured Vite output directory to `out/`.
 
 ### Fixed
-- Router: improved navigate() to handle hash-based navigation and basePath handling, and made path normalization more robust.
-- package.json: removed duplicate `vite` from dependencies and updated package name to `nexus-crypto`.
-- Minor maintenance: added changelog entry documenting the fixes.
+- **Router Navigation Mismatches**: Resolved path handling issues with base paths and subpath routing for deployment environments like GitHub Pages and Vercel.
+- **TypeScript Mismatches & Boundary State Errors**: Fixed error boundary class inheritance, `createAppError` type signature in `src/lib/errors/validation.ts`, and missing `isProcessing` state property in `DemoContext`.
+- **Linting & Code Style Compliance**: Addressed `prefer-const` warnings and unused variables across page components and hooks.
 
 ## [0.1.0] - 2026-08-22
 
@@ -19,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `typecheck` script (`tsc --noEmit`) and `test` script (`vitest run`) in `package.json`.
 - Automated GitHub Actions deployment workflow (`.github/workflows/deploy.yml`) supporting GitHub Pages with concurrency control and permissions.
 - Full `README.md` documentation including project overview, disclaimer, local commands, troubleshooting table, and limitations.
-- `CHANGELOG.md` following Keep a Changelog standard.
+- Initial `CHANGELOG.md` following Keep a Changelog standard.
 
 ### Changed
 - Configured Vite build output directory to `out` and added support for configurable `NEXT_PUBLIC_BASE_PATH` / `BASE_PATH` environment variables.
