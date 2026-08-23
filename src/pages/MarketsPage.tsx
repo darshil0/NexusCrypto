@@ -39,8 +39,8 @@ export const MarketsPage: React.FC = () => {
       if (activeCategory === 'Top Losers') return asset.change24h < 0;
       return asset.category === activeCategory;
     }).sort((a, b) => {
-      let aVal = a[sortField] ?? 0;
-      let bVal = b[sortField] ?? 0;
+      const aVal = a[sortField] ?? 0;
+      const bVal = b[sortField] ?? 0;
 
       if (sortField === 'rank') {
         // Rank ascending is natural (1, 2, 3...)
