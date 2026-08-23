@@ -1,4 +1,5 @@
-import { AppErrorCode, createAppError, AppError } from './error-codes';
+import { AppError } from './error-codes';
+import { createAppError } from './error-messages';
 
 export interface ValidationResult {
   isValid: boolean;
@@ -44,7 +45,7 @@ export function validatePositiveNumber(
   if (num <= 0) {
     return {
       isValid: false,
-      error: createAppError('POSITIVE_VALUE_REQUIRED' as any, `${fieldName} must be greater than zero.`),
+      error: createAppError('NEGATIVE_VALUE', `${fieldName} must be greater than zero.`),
       errorMessage: `${fieldName} must be greater than zero.`,
     };
   }

@@ -109,11 +109,27 @@ export const Modal: React.FC<{
   maxWidth?: string;
   id?: string;
 }> = ({ isOpen, onClose, title, children, maxWidth = 'max-w-lg', id }) => {
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
+
+  const titleId = id ? `${id}-title` : 'modal-title';
 
   return (
     <div
       id={id}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-in fade-in duration-150"
       onClick={onClose}
     >
@@ -122,7 +138,7 @@ export const Modal: React.FC<{
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
-          <h3 className="text-lg font-bold text-white">{title}</h3>
+          <h3 id={titleId} className="text-lg font-bold text-white">{title}</h3>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-gray-800 transition-colors"

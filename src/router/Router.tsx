@@ -9,6 +9,14 @@ interface RouterContextType {
 
 const RouterContext = createContext<RouterContextType | undefined>(undefined);
 
+export function getBasePath(): string {
+  const envBase = (import.meta as any).env?.NEXT_PUBLIC_BASE_PATH || (import.meta as any).env?.BASE_URL || '';
+  if (!envBase || envBase === '/' || envBase === '.') return '';
+  let cleaned = envBase.startsWith('/') ? envBase : '/' + envBase;
+  if (cleaned.endsWith('/')) cleaned = cleaned.slice(0, -1);
+  return cleaned;
+}
+
 function normalizePath(rawPath: string): string {
   let p = rawPath;
   // If starts with hash e.g. #/markets/BTC
@@ -20,6 +28,12 @@ function normalizePath(rawPath: string): string {
   if (qIndex !== -1) {
     p = p.slice(0, qIndex);
   }
+
+  const basePath = getBasePath();
+  if (basePath && p.startsWith(basePath)) {
+    p = p.slice(basePath.length);
+  }
+
   if (!p.startsWith('/')) {
     p = '/' + p;
   }
@@ -58,8 +72,13 @@ export const RouterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const navigate = useCallback((to: string) => {
     if (typeof window !== 'undefined') {
-      window.history.pushState({}, '', to);
-      setCurrentUrl(to);
+      const basePath = getBasePath();
+      let target = to;
+      if (basePath && !to.startsWith(basePath) && !to.startsWith('#')) {
+        target = basePath + (to.startsWith('/') ? to : '/' + to);
+      }
+      window.history.pushState({}, '', target);
+      setCurrentUrl(target);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, []);
@@ -102,30 +121,29 @@ export const useRouter = (): RouterContextType => {
 
 export const Router = RouterProvider;
 
+export function matchRoute(pattern: string, actual: string): boolean {
+  if (pattern === actual) return true;
+  const patternSegments = pattern.split('/').filter(Boolean);
+  const actualSegments = actual.split('/').filter(Boolean);
+
+  // Special case for /trade/:pair matching /trade/BTC/USD or /trade/BTC
+  if (pattern === '/trade/:pair' && actualSegments[0] === 'trade' && actualSegments.length >= 2) {
+    return true;
+  }
+
+  if (patternSegments.length !== actualSegments.length) return false;
+
+  return patternSegments.every((seg, i) => {
+    if (seg.startsWith(':')) return true;
+    return seg === actualSegments[i];
+  });
+}
+
 export const Route: React.FC<{
   path: string;
   component: React.ComponentType<any>;
 }> = ({ path, component: Component }) => {
   const { path: currentPath } = useRouter();
-
-  // Handle parameterized matching
-  const matchRoute = (pattern: string, actual: string) => {
-    if (pattern === actual) return true;
-    const patternSegments = pattern.split('/').filter(Boolean);
-    const actualSegments = actual.split('/').filter(Boolean);
-
-    // Special case for /trade/:pair matching /trade/BTC/USD or /trade/BTC
-    if (pattern === '/trade/:pair' && actualSegments[0] === 'trade' && actualSegments.length >= 2) {
-      return true;
-    }
-
-    if (patternSegments.length !== actualSegments.length) return false;
-
-    return patternSegments.every((seg, i) => {
-      if (seg.startsWith(':')) return true;
-      return seg === actualSegments[i];
-    });
-  };
 
   if (!matchRoute(path, currentPath)) {
     return null;
@@ -134,16 +152,37 @@ export const Route: React.FC<{
   return <Component />;
 };
 
+export const Switch: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { path: currentPath } = useRouter();
+
+  const childrenArray = React.Children.toArray(children);
+  for (const child of childrenArray) {
+    if (React.isValidElement(child)) {
+      if (child.type === Route) {
+        const routePath = (child.props as any).path;
+        if (routePath && matchRoute(routePath, currentPath)) {
+          return child;
+        }
+      } else {
+        return child;
+      }
+    }
+  }
+  return null;
+};
+
 export const Link: React.FC<{
   to: string;
   children: React.ReactNode;
   className?: string;
   id?: string;
+  title?: string;
   onClick?: (e: React.MouseEvent) => void;
   activeClassName?: string;
-}> = ({ to, children, className = '', id, onClick, activeClassName = '' }) => {
+}> = ({ to, children, className = '', id, title, onClick, activeClassName = '' }) => {
   const { path, navigate } = useRouter();
-  const isActive = path === normalizePath(to) || (to !== '/' && path.startsWith(normalizePath(to)));
+  const normalizedTo = normalizePath(to);
+  const isActive = path === normalizedTo || (normalizedTo !== '/' && path.startsWith(normalizedTo));
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -152,9 +191,11 @@ export const Link: React.FC<{
   };
 
   const finalClass = `${className} ${isActive ? activeClassName : ''}`.trim();
+  const basePath = getBasePath();
+  const href = basePath && !to.startsWith(basePath) && !to.startsWith('#') ? basePath + (to.startsWith('/') ? to : '/' + to) : to;
 
   return (
-    <a id={id} href={to} onClick={handleClick} className={finalClass}>
+    <a id={id} href={href} title={title} onClick={handleClick} className={finalClass}>
       {children}
     </a>
   );
