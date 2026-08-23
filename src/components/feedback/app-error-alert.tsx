@@ -1,6 +1,6 @@
 import React from 'react';
 import { AlertCircle, AlertTriangle, CheckCircle2, Info, X } from 'lucide-react';
-import { AppError } from '../../lib/errors/error-codes';
+import type { AppError } from '../../lib/errors/error-codes';
 
 interface AppErrorAlertProps {
   error: AppError | string | null;

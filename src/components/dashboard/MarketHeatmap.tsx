@@ -162,8 +162,8 @@ export const MarketHeatmap: React.FC = () => {
     let gainers = 0;
     let losers = 0;
     let totalChange = 0;
-    let topGainer: CryptoAsset | null = null;
-    let topLoser: CryptoAsset | null = null;
+    let topGainer: CryptoAsset | undefined = undefined;
+    let topLoser: CryptoAsset | undefined = undefined;
 
     assetList.forEach((asset) => {
       totalChange += asset.change24h;
@@ -307,7 +307,7 @@ export const MarketHeatmap: React.FC = () => {
           <span className="text-gray-400 font-sans text-[11px]">Top Gainer:</span>
           {stats.topGainer ? (
             <span className="text-green-400 font-bold">
-              {stats.topGainer.symbol} +{stats.topGainer.change24h.toFixed(2)}%
+              {(stats.topGainer as CryptoAsset).symbol} +{(stats.topGainer as CryptoAsset).change24h.toFixed(2)}%
             </span>
           ) : (
             <span className="text-gray-500">—</span>
@@ -318,7 +318,7 @@ export const MarketHeatmap: React.FC = () => {
           <span className="text-gray-400 font-sans text-[11px]">Top Loser:</span>
           {stats.topLoser ? (
             <span className="text-red-400 font-bold">
-              {stats.topLoser.symbol} {stats.topLoser.change24h.toFixed(2)}%
+              {(stats.topLoser as CryptoAsset).symbol} {(stats.topLoser as CryptoAsset).change24h.toFixed(2)}%
             </span>
           ) : (
             <span className="text-gray-500">—</span>

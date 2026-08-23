@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-08-23
+
+### Fixed
+- **CI/CD Dependency Resolution & Pipeline Fixes**: Added missing `@testing-library/dom` devDependency to `package.json` to fix React Testing Library DOM rendering during automated test execution. Updated ESLint version alignment in `package.json` and `package-lock.json` to resolve peer dependency resolution failures during `npm ci`.
+- **TypeScript & ESLint Compliance**: Resolved strict mode TypeScript compilation errors across `MarketHeatmap`, `AppErrorAlert`, `TradingChart`, `DemoContext`, `ErrorBoundary`, and `utils.test.ts`.
+
 ## [0.3.0] - 2026-08-23
 
 ### Added

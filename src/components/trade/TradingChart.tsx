@@ -74,7 +74,7 @@ export const TradingChart: React.FC<TradingChartProps> = ({
     for (let i = 0; i < count; i++) {
       const t = now - (count - i) * intervalMs;
       const noise = (pseudoRandom() - 0.48) * (basePrice * (timeframe === '24H' ? 0.015 : 0.04));
-      const open = i === 0 ? current : data[i - 1].close;
+      const open = i === 0 ? current : (data[i - 1]?.close ?? current);
       const drift = stepDiff * (0.8 + pseudoRandom() * 0.4);
       const close = i === count - 1 ? basePrice : Math.max(basePrice * 0.1, open + drift + noise);
       const high = Math.max(open, close) + pseudoRandom() * (basePrice * 0.008);
@@ -100,10 +100,10 @@ export const TradingChart: React.FC<TradingChartProps> = ({
     return data;
   }, [symbol, timeframe, basePrice, change24h]);
 
-  // Compute Moving Average (period 7)
+  // Compute Moving Average (period 5)
   const maData = useMemo(() => {
     const period = 5;
-    return candles.map((c, idx, arr) => {
+    return candles.map((_, idx, arr) => {
       if (idx < period - 1) return null;
       const slice = arr.slice(idx - period + 1, idx + 1);
       const avg = slice.reduce((sum, item) => sum + item.close, 0) / period;
@@ -164,7 +164,7 @@ export const TradingChart: React.FC<TradingChartProps> = ({
     return path;
   }, [maData, getX, getY]);
 
-  const activeCandle = hoverIndex !== null ? candles[hoverIndex] : candles[candles.length - 1];
+  const activeCandle = (hoverIndex !== null ? candles[hoverIndex] : candles[candles.length - 1]) || candles[0];
 
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
     if (!containerRef.current) return;
@@ -414,7 +414,7 @@ export const TradingChart: React.FC<TradingChartProps> = ({
           )}
 
           {/* Interactive Crosshair */}
-          {hoverIndex !== null && (
+          {hoverIndex !== null && activeCandle && (
             <g>
               {/* Vertical line */}
               <line

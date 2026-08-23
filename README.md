@@ -26,7 +26,7 @@ NexusCrypto is a modern, frontend-only, browser-based paper trading sandbox that
 - **Bundler**: Vite 6
 - **Styling**: Tailwind CSS v4 + Lucide Icons
 - **Testing**: Vitest 4 + `@testing-library/react` + JSDOM
-- **Code Quality**: ESLint 10 (Flat Config) + TypeScript Strict Mode
+- **Code Quality**: ESLint 9 (Flat Config) + TypeScript Strict Mode
 
 ---
 

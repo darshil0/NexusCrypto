@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import type { CryptoAsset, WalletBalance } from '../types';
+import type { CryptoAsset, WalletBalance, AssetSymbol } from '../types';
 import {
   calculateTradeFee,
   calculateConvertQuote,
@@ -53,12 +53,12 @@ describe('Calculations Utility', () => {
 
   it('calculates portfolio summary', () => {
     const balances = {
-      USD: { symbol: 'USD', name: 'US Dollar', amount: 1000 },
-      BTC: { symbol: 'BTC', name: 'Bitcoin', amount: 1, avgBuyPrice: 60000 },
-    };
+      USD: { symbol: 'USD' as AssetSymbol, name: 'US Dollar', amount: 1000, locked: 0 },
+      BTC: { symbol: 'BTC' as AssetSymbol, name: 'Bitcoin', amount: 1, avgBuyPrice: 60000, locked: 0 },
+    } as unknown as Record<AssetSymbol, WalletBalance>;
     const assets = {
       BTC: {
-        symbol: 'BTC',
+        symbol: 'BTC' as AssetSymbol,
         name: 'Bitcoin',
         price: 65000,
         change24h: 5,
@@ -70,20 +70,21 @@ describe('Calculations Utility', () => {
         category: 'Layer 1',
         description: 'Bitcoin',
         color: '#F7931A',
+        decimals: 8,
       },
-    };
-    const summary = calculatePortfolioSummary(balances as any, assets as any);
+    } as unknown as Record<AssetSymbol, CryptoAsset>;
+    const summary = calculatePortfolioSummary(balances, assets);
     expect(summary.totalValueUSD).toBe(66000);
     expect(summary.totalPnLUSD).toBe(5000);
   });
 
   it('handles 0 avgBuyPrice cost basis correctly without replacing with current price', () => {
     const balances = {
-      BTC: { symbol: 'BTC', name: 'Bitcoin', amount: 1, avgBuyPrice: 0 },
-    };
+      BTC: { symbol: 'BTC' as AssetSymbol, name: 'Bitcoin', amount: 1, avgBuyPrice: 0, locked: 0 },
+    } as unknown as Record<AssetSymbol, WalletBalance>;
     const assets = {
       BTC: {
-        symbol: 'BTC',
+        symbol: 'BTC' as AssetSymbol,
         name: 'Bitcoin',
         price: 50000,
         change24h: 0,
@@ -95,12 +96,13 @@ describe('Calculations Utility', () => {
         category: 'Layer 1',
         description: 'Bitcoin',
         color: '#F7931A',
+        decimals: 8,
       },
-    };
-    const summary = calculatePortfolioSummary(balances as any, assets as any);
+    } as unknown as Record<AssetSymbol, CryptoAsset>;
+    const summary = calculatePortfolioSummary(balances, assets);
     expect(summary.totalValueUSD).toBe(50000);
     expect(summary.totalPnLUSD).toBe(50000);
-    expect(summary.breakdown[0].avgBuyPrice).toBe(0);
+    expect(summary.breakdown[0]?.avgBuyPrice).toBe(0);
   });
 });
 
