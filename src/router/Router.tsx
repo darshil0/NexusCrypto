@@ -18,7 +18,7 @@ export function getBasePath(): string {
 }
 
 function normalizePath(rawPath: string): string {
-  let p = rawPath;
+  let p = rawPath || '';
   // If starts with hash e.g. #/markets/BTC
   if (p.startsWith('#')) {
     p = p.slice(1);
@@ -70,17 +70,36 @@ export const RouterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
   }, []);
 
-  const navigate = useCallback((to: string) => {
-    if (typeof window !== 'undefined') {
-      const basePath = getBasePath();
-      let target = to;
-      if (basePath && !to.startsWith(basePath) && !to.startsWith('#')) {
-        target = basePath + (to.startsWith('/') ? to : '/' + to);
-      }
-      window.history.pushState({}, '', target);
-      setCurrentUrl(target);
+  const navigate = useCallback((to: string, _state?: any) => {
+    if (typeof window === 'undefined') return;
+    const basePath = getBasePath();
+    // If caller explicitly uses hash-based link (e.g. "#/markets/BTC") or
+    // if the current app uses hashes, prefer setting the hash to trigger hashchange.
+    if (to.startsWith('#')) {
+      // keep as-is (e.g. "#/path")
+      window.location.hash = to;
+      // update internal state to the path portion
+      setCurrentUrl(window.location.hash.slice(1));
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
     }
+
+    // If the caller passed a path and the app uses a basePath, ensure the href includes it.
+    let target = to;
+    if (basePath && !to.startsWith(basePath) && !to.startsWith('#')) {
+      target = basePath + (to.startsWith('/') ? to : '/' + to);
+    }
+
+    // Use history API for "clean" routes
+    try {
+      window.history.pushState(_state || {}, '', target);
+    } catch (e) {
+      // Fallback for environments where pushState may fail
+      window.location.assign(target);
+      return;
+    }
+    setCurrentUrl(target);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   // Compute params based on route structure
@@ -164,6 +183,7 @@ export const Switch: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           return child;
         }
       } else {
+        // Non-Route children are treated as a fallback (e.g. a NotFound component)
         return child;
       }
     }
@@ -200,5 +220,3 @@ export const Link: React.FC<{
     </a>
   );
 };
-
-
