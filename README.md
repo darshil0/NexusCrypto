@@ -1,154 +1,154 @@
 # NexusCrypto — Paper Trading Platform
 
-NexusCrypto is a frontend-only, browser-based paper trading sandbox that simulates a simplified cryptocurrency trading experience for learning and experimentation. It's intended for demos, tutorials, and local development — not real trading, custody, or financial advice.
+NexusCrypto is a modern, frontend-only, browser-based paper trading sandbox that simulates a full cryptocurrency trading experience for learning, testing, and experimentation. It is designed for demos, educational tutorials, and local development — zero real funds, blockchain transactions, or financial custody are involved.
 
-> ⚠️ DISCLAIMER: NexusCrypto is strictly a paper trading sandbox and educational demo. No real funds, blockchain transactions, or external custody are used. All balances, orders, notifications, and activity are simulated locally in the browser.
-
----
-
-## Quick highlights
-
-- Simulated paper trading terminal with market/limit orders, order book, and charting UI.
-- Portfolio, wallet faucet, and transaction ledger stored locally (safe localStorage fallback to in-memory storage when required).
-- Watchlists and alert notifications for price changes.
-- Educational Learn Hub with articles and micro-quizzes.
-- Lightweight client-side router with optional base-path support for GitHub Pages.
+> ⚠️ **DISCLAIMER**: NexusCrypto is strictly a paper trading sandbox and educational tool. All funds, balances, order book data, trades, and market activity are simulated locally inside the user's browser session.
 
 ---
 
-## Tech stack
+## Key Features
 
-- Framework: React 19 + TypeScript
-- Bundler: Vite
-- Styling: Tailwind CSS
-- Icons: Lucide
-- Testing: Vitest
+- **Interactive Paper Trading Sandbox**: Execute simulated Market, Limit, and Stop Loss orders with real-time portfolio balance updates.
+- **Instant Asset Conversion**: Convert between available cryptocurrencies and USD with zero real-world slippage or fees.
+- **Market Heatmap & Live Analytics**: Real-time asset price tracking, 24-hour performance indicators, volume metrics, order books, and recent trade history.
+- **Educational Learn Hub & Micro-Quizzes**: Interactive articles, crypto beginner guides, and micro-quizzes to test and reinforce trading concepts.
+- **Watchlists & Custom Price Alerts**: Create custom watchlists and set target price alerts with toast notifications.
+- **SafeStorage Fallback**: Storage wrapper (`safeStorage`) that transparently falls back to in-memory state if `localStorage` is disabled, blocked, or quota-exceeded.
+- **Client Router with Subpath Support**: Custom lightweight client router that gracefully handles subpath routing (e.g., GitHub Pages) and hash navigation fallbacks.
 
 ---
 
-## Getting started (local development)
+## Tech Stack
 
-Prerequisites:
-- Node.js 18+ (20 LTS recommended)
-- npm (v9+) or bun/pnpm
+- **Framework**: React 19 + TypeScript 5.8
+- **Bundler**: Vite 6
+- **Styling**: Tailwind CSS v4 + Lucide Icons
+- **Testing**: Vitest 4 + `@testing-library/react` + JSDOM
+- **Code Quality**: ESLint 10 (Flat Config) + TypeScript Strict Mode
 
-Install and run locally:
+---
+
+## Quick Start (Local Development)
+
+### Prerequisites
+- Node.js 18+ (20+ LTS recommended)
+- `npm` (v9+) or `bun`/`pnpm`
+
+### Installation & Running
 
 ```bash
-# install
+# Clone the repository
+git clone https://github.com/darshil0/nexus-crypto.git
+cd nexus-crypto
+
+# Install dependencies
 npm install
 
-# dev server (localhost:3000)
+# Start the local development server (localhost:3000)
 npm run dev
 ```
 
-Type checking & linting:
+### Available Scripts
 
-```bash
-npm run typecheck   # tsc --noEmit
-npm run lint        # eslint .
-```
-
-Run tests:
-
-```bash
-npm run test        # vitest
-```
-
-Build:
-
-```bash
-npm run build       # builds static output (configured to `out/`)
-```
+| Command | Action |
+| :--- | :--- |
+| `npm run dev` | Starts Vite development server at `http://localhost:3000` |
+| `npm run typecheck` | Runs TypeScript compiler (`tsc --noEmit`) to verify type safety |
+| `npm run lint` | Runs ESLint across all codebase files |
+| `npm run test` | Executes unit test suite using Vitest |
+| `npm run build` | Builds optimized static production distribution output to `out/` |
+| `npm run preview` | Previews the production static build locally |
+| `npm run clean` | Cleans build artifacts and dist directories |
 
 ---
 
-## App behavior & runtime notes
+## Architecture & Behavior
 
-Storage:
-- The app stores all demo user data in `localStorage` using a safe storage wrapper. If `localStorage` is unavailable (private mode, quota errors), it falls back to an in-memory store for the session.
-- Reset demo data via the top banner `Reset Demo` button or from Settings.
+### Storage Engine
+All demo user state (balances, open orders, order history, watchlists, and price alerts) is persisted in `localStorage` via a resilient `safeStorage` utility. If `localStorage` is unavailable (e.g., private browsing mode or storage quotas), `safeStorage` automatically shifts to in-memory store for the session without throwing runtime exceptions.
+Users can reset all demo data anytime via the **Reset Demo** button in the header banner or in Settings.
 
-Routing & base path:
-- The client router supports a `NEXT_PUBLIC_BASE_PATH`/`BASE_URL` environment variable for deployments under a subpath (e.g., GitHub Pages).
-- The router also supports hash-style routes; navigation will prefer clean history API routes where available and fall back to hash navigation when appropriate.
+### Client-Side Routing & Base Paths
+The custom client-side router (`Router.tsx`) resolves navigation relative to an optional base path. When deploying to site subpaths (such as GitHub Pages at `https://username.github.io/repository`), set `NEXT_PUBLIC_BASE_PATH` or `BASE_PATH` during build time.
 
-Accessibility:
-- Focusable "Skip to content" anchor is included for keyboard navigation. Modals and interactive components include accessible attributes where applicable, but this is an MVP — review with an a11y audit for production readiness.
+### Accessibility (a11y)
+- Focusable **"Skip to content"** link for keyboard-only navigation.
+- Accessible Modal dialogs with keyboard trap support, `Escape` key close handlers, `role="dialog"`, `aria-modal`, and `aria-labelledby` bindings.
 
 ---
 
-## Environment variables
+## Environment Variables
 
-- NEXT_PUBLIC_BASE_PATH (optional) — set this if deploying to a site subpath (e.g. `/${repo-name}`) so asset and route resolution is correct.
+- `NEXT_PUBLIC_BASE_PATH` *(optional)*: Base path prefix for asset resolution and route matching when deployed under a subpath.
 
-Set during build time, for example:
+Example build command for subpath deployment:
 
 ```bash
-NEXT_PUBLIC_BASE_PATH=/NexusCrypto- npm run build
+NEXT_PUBLIC_BASE_PATH=/nexus-crypto npm run build
 ```
 
 ---
 
 ## Deployment
 
-Vercel
-- Framework Preset: Vite
-- Build command: `npm run build`
-- Output directory: `out` (ensure Vite config uses `out` as `build.outDir`)
+### Vercel
+1. Import repository into Vercel.
+2. Select **Vite** preset.
+3. Build Command: `npm run build`
+4. Output Directory: `out`
 
-GitHub Pages
-- A GitHub Actions workflow (if present) can be used to publish the `out/` directory to GitHub Pages. If deploying under `username.github.io/repo-name`, set `NEXT_PUBLIC_BASE_PATH` to `/repo-name` at build time.
+### GitHub Pages
+A GitHub Actions workflow (`.github/workflows/deploy.yml`) is included. It automatically builds, runs typecheck, tests, and deploys the generated `out/` directory to GitHub Pages on every push to `main` or `master`.
 
 ---
 
-## Project structure (abridged)
+## Project Structure
 
 ```
-src/
-├─ components/       # UI components, layout, trade widgets
-├─ context/          # DemoContext (global demo state)
-├─ data/             # seed/mock data
-├─ lib/              # utilities, safeStorage, error handling
-├─ pages/            # route views
-├─ router/           # small client router
-├─ types/            # TypeScript types
-└─ utils/            # formatters & calculations
+nexus-crypto/
+├── .github/workflows/  # GitHub Actions CI/CD workflows
+├── out/                # Build output directory (static export)
+├── src/
+│   ├── components/     # UI components (dashboard, trade, feedback, layout, ui)
+│   ├── context/        # DemoContext global state management & testing
+│   ├── data/           # Mock market data & initial seed state
+│   ├── hooks/          # React custom hooks (e.g., useHydrated)
+│   ├── lib/            # Error boundaries, safeStorage, error definitions
+│   ├── pages/          # Route views (Trade, Markets, Wallet, Learn, etc.)
+│   ├── router/         # Lightweight client router with base path support
+│   ├── types/          # TypeScript domain interfaces
+│   └── utils/          # Financial calculations, formatters, and unit tests
+├── index.html          # HTML entrypoint
+├── package.json        # Dependencies and scripts
+├── tsconfig.json       # TypeScript configuration
+└── vite.config.ts      # Vite configuration & build settings
 ```
 
 ---
 
 ## Troubleshooting
 
-- Blank page / broken assets: ensure `NEXT_PUBLIC_BASE_PATH` and `vite.config.ts` base are configured correctly for your deployment.
-- Route refresh 404 on static hosting: either configure the host to rewrite requests to `index.html` or use hash-based routing (router supports this fallback).
-- localStorage errors in private mode: the app will fall back to in-memory storage; clear cookies or use a normal browser window for persistence.
+| Issue | Cause | Solution |
+| :--- | :--- | :--- |
+| **Blank page / Asset 404** | Incorrect base path configuration | Ensure `NEXT_PUBLIC_BASE_PATH` matches your subpath during build. |
+| **Page refresh 404 on static hosts** | Host not rewriting SPA routes to `index.html` | Enable SPA rewrites on host or rely on hash-style routing. |
+| **Data resets on page reload** | In-memory storage fallback active | Ensure `localStorage` is enabled in browser privacy settings. |
 
 ---
 
 ## Contributing
 
-Contributions are welcome. Please open issues or PRs describing the change, run the typechecker and linter, and include tests for behavior changes where possible.
-
-Suggested workflow:
-
-```bash
-git checkout -b fix/your-change
-# make changes
-npm run typecheck
-npm run lint
-npm run test
-git commit -am "Describe your change"
-git push origin fix/your-change
-# open PR
-```
+1. Fork the repository & create a feature branch (`git checkout -b feature/amazing-feature`).
+2. Run quality checks before submitting PRs:
+   ```bash
+   npm run typecheck
+   npm run lint
+   npm run test
+   ```
+3. Commit your changes and open a Pull Request.
 
 ---
 
 ## License
 
-This project is provided as-is for educational/demo purposes. Check the repository root for an explicit license file — if none is present, assume personal/educational demo use only and request permission before reusing any substantial parts.
-
----
-
-If you want, I can (1) add badges, a shorter intro for npm/github listing, and/or (2) tailor the README with usage screenshots and example flows. Do you want any of those?
+This project is open-source and intended for educational and demonstration purposes.
