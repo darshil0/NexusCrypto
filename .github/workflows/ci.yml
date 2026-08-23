@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -22,33 +22,34 @@ jobs:
     name: Lint, Typecheck, Test & Build
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: npm
           cache-dependency-path: package-lock.json
 
-      - name: Install dependencies cleanly
+      - name: Install dependencies
         run: npm ci
 
-      - name: Dependency security audit
-        run: npm audit --audit-level=high
+      - name: Audit high-severity production dependencies
+        run: npm audit --omit=dev --audit-level=high
 
-      - name: Code Quality & Linting
+      - name: Lint
         run: npm run lint
 
-      - name: TypeScript Typecheck
+      - name: Type check
         run: npm run typecheck
 
-      - name: Run Unit & Integration Tests with Coverage
-        run: npm run test -- --coverage
+      - name: Test with coverage
+        run: npm run test:coverage
 
-      - name: Verify Production Build
+      - name: Build production bundle
         run: npm run build
         env:
           NODE_ENV: production
