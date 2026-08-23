@@ -1,30 +1,79 @@
 @import "tailwindcss";
 
 :root {
-  --bg-sleek-main: #0B0E11;
-  --bg-sleek-card: #161A1E;
-  --bg-sleek-input: #0B0E11;
-  --border-sleek: #1F242B;
+  color-scheme: dark;
+
+  --bg-sleek-main: #0b0e11;
+  --bg-sleek-card: #161a1e;
+  --bg-sleek-input: #0b0e11;
+  --border-sleek: #1f242b;
+
+  --text-primary: #f3f4f6;
+  --scrollbar-track: #0b0e11;
+  --scrollbar-thumb: #232932;
+  --scrollbar-thumb-hover: #374151;
+}
+
+html {
+  min-height: 100%;
+  background-color: var(--bg-sleek-main);
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-width: thin;
 }
 
 body {
-  background-color: #0B0E11;
-  color: #F3F4F6;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background-color: var(--bg-sleek-main);
+  color: var(--text-primary);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+  text-rendering: optimizeLegibility;
 }
 
-/* Custom scrollbars for clean sleek crypto UI */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Chromium, Safari, and other WebKit-based browsers */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
-  background: #0B0E11;
+  background: var(--scrollbar-track);
 }
+
 ::-webkit-scrollbar-thumb {
-  background: #232932;
+  background: var(--scrollbar-thumb);
+  border: 1px solid var(--scrollbar-track);
   border-radius: 9999px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: #374151;
+  background: var(--scrollbar-thumb-hover);
 }
