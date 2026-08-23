@@ -51,14 +51,20 @@ npm run lint
 npm run typecheck
 ```
 
-Run unit tests:
+Run unit & integration test suite with coverage:
 ```bash
 npm run test
+npx vitest run --coverage
 ```
 
 Build production static export (outputs to `out/` directory):
 ```bash
 npm run build
+```
+
+Run dependency security audit:
+```bash
+npm audit --audit-level=high
 ```
 
 ---
