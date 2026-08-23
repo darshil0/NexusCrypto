@@ -12,7 +12,9 @@ NexusCrypto is a modern, frontend-only, browser-based paper trading sandbox that
 - **Instant Asset Conversion**: Convert between available cryptocurrencies and USD with zero real-world slippage or fees.
 - **Market Heatmap & Live Analytics**: Real-time asset price tracking, 24-hour performance indicators, volume metrics, order books, and recent trade history.
 - **Educational Learn Hub & Micro-Quizzes**: Interactive articles, crypto beginner guides, and micro-quizzes to test and reinforce trading concepts.
-- **Watchlists & Custom Price Alerts**: Create custom watchlists and set target price alerts with toast notifications.
+- **Watchlists & Custom Price Alerts**: Create custom watchlists and set target price triggers with persistent `localStorage` storage, real-time distance calculations, and instant re-arm controls.
+- **Header Visual Indicator for Price Alerts**: Real-time visual indicator in the top navigation bar and live ticker that activates and pulses when target prices are crossed by simulated market movements.
+- **Market Movement Simulator**: Interactive price slider and multiplier tool in the alerts manager to simulate market pumps and dumps for immediate trigger verification.
 - **SafeStorage Fallback**: Storage wrapper (`safeStorage`) that transparently falls back to in-memory state if `localStorage` is disabled, blocked, or quota-exceeded.
 - **Client Router with Subpath Support**: Custom lightweight client router that gracefully handles subpath routing (e.g., GitHub Pages) and hash navigation fallbacks.
 
@@ -67,6 +69,13 @@ npm run dev
 ### Storage Engine
 All demo user state (balances, open orders, order history, watchlists, and price alerts) is persisted in `localStorage` via a resilient `safeStorage` utility. If `localStorage` is unavailable (e.g., private browsing mode or storage quotas), `safeStorage` automatically shifts to in-memory store for the session without throwing runtime exceptions.
 Users can reset all demo data anytime via the **Reset Demo** button in the header banner or in Settings.
+
+### Price Alerts & Visual Header Indicators
+The Price Alerts system allows users to set target price triggers for any supported cryptocurrency:
+- **Condition Triggers**: Configure `≥ RISES ABOVE` or `≤ FALLS BELOW` price thresholds with optional strategy notes and percentage preset shortcuts (`±1%`, `±5%`, `±10%`).
+- **Simulated Market Ticks**: Price movements evaluate active triggers on each tick, logging triggered prices and timestamps while preventing duplicate events.
+- **Header Visual Radar**: When an alert fires, a pulsating indicator in the top navbar and a live ticker alert pill appear immediately to notify the trader.
+- **Quick Controls & Re-Arming**: Inspect distances to targets (`% to target`), test alerts directly with the built-in market simulator, re-arm triggered alerts, or quick-add triggers from the header popover without leaving the page.
 
 ### Client-Side Routing & Base Paths
 The custom client-side router (`Router.tsx`) resolves navigation relative to an optional base path. When deploying to site subpaths (such as GitHub Pages at `https://username.github.io/repository`), set `NEXT_PUBLIC_BASE_PATH` or `BASE_PATH` during build time.

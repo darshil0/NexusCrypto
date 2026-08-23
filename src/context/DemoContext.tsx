@@ -94,6 +94,12 @@ interface DemoContextType {
     note?: string
   ) => { success: boolean; error?: string };
   deleteAlert: (alertId: string) => void;
+  rearmAlert: (alertId: string) => void;
+  dismissAlert: (alertId: string) => void;
+  clearTriggeredAlerts: () => void;
+  clearAllAlerts: () => void;
+  simulatePriceMovement: (symbol: AssetSymbol, newPrice: number) => void;
+  testTriggerAlert: (alertId: string) => void;
   markNotificationAsRead: (id: string) => void;
   clearAllNotifications: () => void;
   updateSettings: (newSettings: Partial<UserSettings>) => void;
@@ -351,16 +357,28 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       if (shouldTrigger) {
+        const trigPrice = asset.price;
         setAlerts((prev) =>
           prev.map((a) =>
-            a.id === alert.id ? { ...a, triggered: true, triggeredAt: Date.now() } : a
+            a.id === alert.id
+              ? {
+                  ...a,
+                  triggered: true,
+                  triggeredAt: Date.now(),
+                  triggeredPrice: trigPrice,
+                  dismissed: false,
+                }
+              : a
           )
         );
 
         const notif: NotificationItem = {
-          id: `notif-alert-${Date.now()}`,
+          id: `notif-alert-${Date.now()}-${alert.id}`,
           title: `Price Alert: ${alert.symbol} Triggered!`,
-          message: `${alert.symbol} is now at ${formatUSD(asset.price)} (${alert.condition} target ${formatUSD(alert.targetValue)}).`,
+          message: `${alert.symbol} crossed your ${alert.condition.toUpperCase()} target of ${formatUSD(
+            alert.targetValue,
+            alert.symbol === 'USDC' || alert.symbol === 'XRP' ? 4 : 2
+          )} (Now ${formatUSD(trigPrice, alert.symbol === 'USDC' || alert.symbol === 'XRP' ? 4 : 2)}).`,
           type: 'alert',
           timestamp: Date.now(),
           read: false,
@@ -1036,6 +1054,85 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     [addToast]
   );
 
+  const rearmAlert = useCallback(
+    (alertId: string) => {
+      setAlerts((prev) =>
+        prev.map((a) =>
+          a.id === alertId
+            ? { ...a, triggered: false, triggeredAt: undefined, triggeredPrice: undefined, dismissed: false }
+            : a
+        )
+      );
+      addToast('success', 'Alert re-armed and actively monitoring market prices');
+    },
+    [addToast]
+  );
+
+  const dismissAlert = useCallback((alertId: string) => {
+    setAlerts((prev) =>
+      prev.map((a) => (a.id === alertId ? { ...a, dismissed: true } : a))
+    );
+  }, []);
+
+  const clearTriggeredAlerts = useCallback(() => {
+    setAlerts((prev) => prev.filter((a) => !a.triggered));
+    addToast('info', 'Cleared all triggered alerts');
+  }, [addToast]);
+
+  const clearAllAlerts = useCallback(() => {
+    setAlerts([]);
+    addToast('info', 'All price alerts removed');
+  }, [addToast]);
+
+  // Allows manual simulation of price shifts to test triggers
+  const simulatePriceMovement = useCallback(
+    (symbol: AssetSymbol, newPrice: number) => {
+      if (!newPrice || newPrice <= 0) return;
+      setAssets((prev) => {
+        const current = prev[symbol];
+        if (!current) return prev;
+        const roundedPrice = symbol === 'XRP' || symbol === 'ADA' || symbol === 'USDC'
+          ? Number(newPrice.toFixed(4))
+          : Number(newPrice.toFixed(2));
+        const newSparkline = [...current.sparkline.slice(1), roundedPrice];
+        const newHigh = Math.max(current.high24h, roundedPrice);
+        const newLow = Math.min(current.low24h, roundedPrice);
+        const pctDiff = ((roundedPrice - current.price) / current.price) * 100;
+        const newChange = Number((current.change24h + pctDiff).toFixed(2));
+
+        return {
+          ...prev,
+          [symbol]: {
+            ...current,
+            price: roundedPrice,
+            sparkline: newSparkline,
+            high24h: newHigh,
+            low24h: newLow,
+            change24h: newChange,
+          },
+        };
+      });
+      addToast('info', `Simulated ${symbol} price updated to ${formatUSD(newPrice)}`);
+    },
+    [addToast]
+  );
+
+  const testTriggerAlert = useCallback(
+    (alertId: string) => {
+      const alert = alerts.find((a) => a.id === alertId);
+      if (!alert) return;
+      // Nudge price slightly beyond target
+      const targetPrice =
+        alert.condition === 'above'
+          ? alert.targetValue * 1.002
+          : alert.condition === 'below'
+          ? alert.targetValue * 0.998
+          : (assets[alert.symbol]?.price || 100) * 1.05;
+      simulatePriceMovement(alert.symbol, targetPrice);
+    },
+    [alerts, assets, simulatePriceMovement]
+  );
+
   // Notifications
   const markNotificationAsRead = useCallback((id: string) => {
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
@@ -1132,6 +1229,12 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
         toggleWatchlist,
         createAlert,
         deleteAlert,
+        rearmAlert,
+        dismissAlert,
+        clearTriggeredAlerts,
+        clearAllAlerts,
+        simulatePriceMovement,
+        testTriggerAlert,
         markNotificationAsRead,
         clearAllNotifications,
         updateSettings,

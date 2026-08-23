@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-08-23
+
+### Added
+- **Price Alerts Trigger System**: Save target price triggers (`≥ above` and `≤ below`) persisted reliably across browser sessions in `localStorage`.
+- **Header Visual Indicator & Live Ticker Alerts**: Visual alert beacon in the top header with radar pulse effect, count badges, and ticker indicators displaying when simulated market movements cross configured targets.
+- **Quick Alerts Dropdown**: Header dropdown allowing users to view active vs. triggered alerts, inspect distances to targets (`% to target`), test alerts, re-arm triggered triggers, and set new price alerts without leaving the page.
+- **Market Movement Simulator**: Interactive control panel in `/watchlist` enabling users to simulate market movements (e.g. +5% pumps or -5% dumps) to test alert triggers in real time.
+- **Price Alerts Unit Tests**: Vitest test suite (`src/__tests__/price-alerts.test.ts`) validating threshold conditions, state transitions, and re-arming behavior.
+
 ## [0.2.0] - 2026-08-22
 
 ### Added

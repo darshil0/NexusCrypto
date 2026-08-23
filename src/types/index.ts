@@ -85,6 +85,8 @@ export interface PriceAlert {
   createdAt: number;
   triggered: boolean;
   triggeredAt?: number;
+  triggeredPrice?: number;
+  dismissed?: boolean;
   note?: string;
 }
 
