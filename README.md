@@ -15,6 +15,7 @@ NexusCrypto is a modern, frontend-only, browser-based paper trading sandbox that
 - **Watchlists & Custom Price Alerts**: Create custom watchlists and set target price triggers with persistent `localStorage` storage, real-time distance calculations, and instant re-arm controls.
 - **Header Visual Indicator for Price Alerts**: Real-time visual indicator in the top navigation bar and live ticker that activates and pulses when target prices are crossed by simulated market movements.
 - **Market Movement Simulator**: Interactive price slider and multiplier tool in the alerts manager to simulate market pumps and dumps for immediate trigger verification.
+- **Light / Dark / System Theme Support**: Seamless theme switching supporting Dark, Light, and System preference modes with persistent storage.
 - **SafeStorage Fallback**: Storage wrapper (`safeStorage`) that transparently falls back to in-memory state if `localStorage` is disabled, blocked, or quota-exceeded.
 - **Client Router with Subpath Support**: Custom lightweight client router that gracefully handles subpath routing (e.g., GitHub Pages) and hash navigation fallbacks.
 

@@ -237,4 +237,43 @@ describe('DemoContext State and Operations', () => {
     });
     expect(Number(screen.getByTestId('usd-balance').textContent)).toBe(25000);
   });
+
+  it('updates HTML root class when theme settings change', () => {
+    const TestThemeComponent: React.FC = () => {
+      const { settings, updateSettings } = useDemo();
+      return (
+        <div>
+          <span data-testid="current-theme">{settings.theme}</span>
+          <button data-testid="set-light" onClick={() => updateSettings({ theme: 'light' })}>
+            Light
+          </button>
+          <button data-testid="set-dark" onClick={() => updateSettings({ theme: 'dark' })}>
+            Dark
+          </button>
+        </div>
+      );
+    };
+
+    render(
+      <DemoProvider>
+        <TestThemeComponent />
+      </DemoProvider>
+    );
+
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+
+    act(() => {
+      screen.getByTestId('set-light').click();
+    });
+
+    expect(screen.getByTestId('current-theme').textContent).toBe('light');
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
+
+    act(() => {
+      screen.getByTestId('set-dark').click();
+    });
+
+    expect(screen.getByTestId('current-theme').textContent).toBe('dark');
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+  });
 });

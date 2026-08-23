@@ -259,11 +259,48 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Apply dark / light theme class to root
   useEffect(() => {
     const root = document.documentElement;
-    if (settings.theme === 'light') {
-      root.classList.remove('dark');
-    } else {
-      root.classList.add('dark');
+    const applyTheme = (theme: 'dark' | 'light' | 'system') => {
+      let isDark = true;
+      if (theme === 'system') {
+        isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      } else {
+        isDark = theme === 'dark';
+      }
+
+      if (isDark) {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
+    };
+
+    applyTheme(settings.theme);
+
+    if (settings.theme === 'system' && window.matchMedia) {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const listener = (e: MediaQueryListEvent) => {
+        if (e.matches) {
+          root.classList.add('dark');
+        } else {
+          root.classList.remove('dark');
+        }
+      };
+
+      if (mediaQuery.addEventListener) {
+        mediaQuery.addEventListener('change', listener);
+      } else {
+        mediaQuery.addListener(listener);
+      }
+
+      return () => {
+        if (mediaQuery.removeEventListener) {
+          mediaQuery.removeEventListener('change', listener);
+        } else {
+          mediaQuery.removeListener(listener);
+        }
+      };
     }
+    return undefined;
   }, [settings.theme]);
 
   // Toast manager
