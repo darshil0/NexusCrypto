@@ -187,6 +187,7 @@ export const WatchlistAlertsPage: React.FC = () => {
                         <tr key={sym} className="hover:bg-slate-800/40 transition-colors font-mono">
                           <td className="px-4 py-3.5 text-center">
                             <button
+                              type="button"
                               onClick={() => toggleWatchlist(sym)}
                               className="text-amber-400 hover:text-slate-400 transition-colors"
                               title="Toggle favorite"
@@ -211,6 +212,7 @@ export const WatchlistAlertsPage: React.FC = () => {
                           </td>
                           <td className="px-4 py-3.5 text-center">
                             <button
+                              type="button"
                               onClick={() => {
                                 setSelectedSymbol(sym as AssetSymbol);
                                 const estPrice = (asset.price * 1.05).toFixed(
@@ -256,6 +258,7 @@ export const WatchlistAlertsPage: React.FC = () => {
               {/* Filter Tabs */}
               <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs">
                 <button
+                  type="button"
                   onClick={() => setFilterTab('all')}
                   className={`px-2.5 py-1 rounded-md transition-colors ${
                     filterTab === 'all'
@@ -266,6 +269,7 @@ export const WatchlistAlertsPage: React.FC = () => {
                   All ({alerts.length})
                 </button>
                 <button
+                  type="button"
                   onClick={() => setFilterTab('active')}
                   className={`px-2.5 py-1 rounded-md transition-colors ${
                     filterTab === 'active'
@@ -276,6 +280,7 @@ export const WatchlistAlertsPage: React.FC = () => {
                   Active ({activeAlerts.length})
                 </button>
                 <button
+                  type="button"
                   onClick={() => setFilterTab('triggered')}
                   className={`px-2.5 py-1 rounded-md transition-colors ${
                     filterTab === 'triggered'
@@ -396,6 +401,7 @@ export const WatchlistAlertsPage: React.FC = () => {
                         <div className="flex items-center gap-2 self-end sm:self-center font-sans">
                           {isMet ? (
                             <button
+                              type="button"
                               onClick={() => rearmAlert(al.id)}
                               className="px-2.5 py-1.5 rounded-lg bg-emerald-950/60 hover:bg-emerald-900 border border-emerald-800 text-emerald-300 text-xs font-semibold flex items-center gap-1.5 transition-colors"
                               title="Re-arm alert to continue monitoring live prices"
@@ -405,6 +411,7 @@ export const WatchlistAlertsPage: React.FC = () => {
                             </button>
                           ) : (
                             <button
+                              type="button"
                               onClick={() => testTriggerAlert(al.id)}
                               className="px-2.5 py-1.5 rounded-lg bg-indigo-950/60 hover:bg-indigo-900 border border-indigo-800 text-indigo-300 text-xs font-semibold flex items-center gap-1.5 transition-colors"
                               title="Simulate price crossing target to test notification"
@@ -415,13 +422,17 @@ export const WatchlistAlertsPage: React.FC = () => {
                           )}
 
                           <Link to={`/trade/${al.symbol}/USD`}>
-                            <button className="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1 transition-colors">
+                            <button
+                              type="button"
+                              className="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1 transition-colors"
+                            >
                               <span>Trade</span>
                               <ArrowRight className="w-3 h-3" />
                             </button>
                           </Link>
 
                           <button
+                            type="button"
                             onClick={() => deleteAlert(al.id)}
                             className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-slate-800 transition-colors"
                             title="Delete alert"

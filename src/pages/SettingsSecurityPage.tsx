@@ -79,6 +79,7 @@ export const SettingsSecurityPage: React.FC = () => {
       {/* Tabs */}
       <div className="flex border-b border-slate-800 gap-6 text-sm font-semibold">
         <button
+          type="button"
           onClick={() => setActiveTab('general')}
           className={`pb-3 transition-colors flex items-center gap-2 ${
             activeTab === 'general'
@@ -90,6 +91,7 @@ export const SettingsSecurityPage: React.FC = () => {
           <span>Preferences</span>
         </button>
         <button
+          type="button"
           onClick={() => setActiveTab('security')}
           className={`pb-3 transition-colors flex items-center gap-2 ${
             activeTab === 'security'
@@ -101,6 +103,7 @@ export const SettingsSecurityPage: React.FC = () => {
           <span>Security Simulator</span>
         </button>
         <button
+          type="button"
           onClick={() => setActiveTab('danger')}
           className={`pb-3 transition-colors flex items-center gap-2 ${
             activeTab === 'danger'
@@ -127,6 +130,7 @@ export const SettingsSecurityPage: React.FC = () => {
               </div>
               <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
                 <button
+                  type="button"
                   onClick={() => updateSettings({ theme: 'dark' })}
                   className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${
                     settings.theme === 'dark' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-400'
@@ -135,6 +139,7 @@ export const SettingsSecurityPage: React.FC = () => {
                   <Moon className="w-3.5 h-3.5" /> Dark
                 </button>
                 <button
+                  type="button"
                   onClick={() => updateSettings({ theme: 'light' })}
                   className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${
                     settings.theme === 'light' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-400'
@@ -201,6 +206,7 @@ export const SettingsSecurityPage: React.FC = () => {
             <div className="pt-2 flex justify-between items-center text-xs">
               <span className="text-slate-400">Protects withdrawals and sensitive order actions</span>
               <button
+                type="button"
                 onClick={() => setMfaEnabled(!mfaEnabled)}
                 className="text-indigo-400 font-bold hover:underline"
               >
@@ -267,7 +273,10 @@ export const SettingsSecurityPage: React.FC = () => {
                     </div>
                   </div>
                   {!sess.isCurrent && (
-                    <button className="text-rose-400 text-xs font-sans hover:underline">
+                    <button
+                      type="button"
+                      className="text-rose-400 text-xs font-sans hover:underline"
+                    >
                       Revoke
                     </button>
                   )}

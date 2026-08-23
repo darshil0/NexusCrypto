@@ -140,6 +140,7 @@ export const Navbar: React.FC = () => {
               {formatUSD(recentTriggeredAlert.targetValue)}
             </span>
             <button
+              type="button"
               onClick={() => setIsAlertsOpen(true)}
               className="underline font-semibold text-amber-100 hover:text-white ml-1 cursor-pointer"
             >
@@ -156,6 +157,7 @@ export const Navbar: React.FC = () => {
             </strong>
           </span>
           <button
+            type="button"
             onClick={resetDemoData}
             title="Reset sandbox balances"
             className="flex items-center gap-1 text-gray-400 hover:text-amber-400 transition-colors text-xs"
