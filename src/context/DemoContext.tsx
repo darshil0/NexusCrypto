@@ -300,6 +300,8 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         Object.keys(next).forEach((sym) => {
           const current = next[sym];
+          if (!current) return;
+
           if (sym === 'USDC') {
             // USDC stays tight around 1.00
             const delta = (Math.random() - 0.5) * 0.0002;
@@ -422,7 +424,7 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           if (ord.side === 'buy') {
             // Unlock quote funds and add base crypto
-            const currentQuote = next[quoteSymbol] || { symbol: quoteSymbol, name: quoteSymbol, amount: 0, lockedInOrders: 0 };
+      const currentQuote = next[quoteSymbol] || { symbol: quoteSymbol as AssetSymbol, name: quoteSymbol, amount: 0, lockedInOrders: 0 };
             const currentBase = next[baseSymbol] || { symbol: baseSymbol, name: asset.name, amount: 0, lockedInOrders: 0 };
 
             next[quoteSymbol] = {
@@ -792,7 +794,10 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const prices: Record<string, number> = {};
       Object.keys(assets).forEach((k) => {
-        prices[k] = assets[k].price;
+        const asset = assets[k];
+        if (asset) {
+          prices[k] = asset.price;
+        }
       });
       prices.USD = 1.0;
 
@@ -1122,12 +1127,13 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const alert = alerts.find((a) => a.id === alertId);
       if (!alert) return;
       // Nudge price slightly beyond target
+      const asset = assets[alert.symbol];
       const targetPrice =
         alert.condition === 'above'
           ? alert.targetValue * 1.002
           : alert.condition === 'below'
           ? alert.targetValue * 0.998
-          : (assets[alert.symbol]?.price || 100) * 1.05;
+          : (asset?.price || 100) * 1.05;
       simulatePriceMovement(alert.symbol, targetPrice);
     },
     [alerts, assets, simulatePriceMovement]
