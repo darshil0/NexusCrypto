@@ -10,6 +10,9 @@ on:
       - main
       - master
 
+permissions:
+  contents: read
+
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -18,6 +21,7 @@ jobs:
   validate:
     name: Lint, Typecheck, Test & Build
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,14 +36,17 @@ jobs:
       - name: Install dependencies cleanly
         run: npm ci
 
+      - name: Dependency security audit
+        run: npm audit --audit-level=high
+
       - name: Code Quality & Linting
         run: npm run lint
 
       - name: TypeScript Typecheck
         run: npm run typecheck
 
-      - name: Run Unit & Integration Tests
-        run: npm run test
+      - name: Run Unit & Integration Tests with Coverage
+        run: npm run test -- --coverage
 
       - name: Verify Production Build
         run: npm run build
