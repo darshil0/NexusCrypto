@@ -1049,6 +1049,7 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
         portfolio,
         activePair,
         setActivePair,
+        isProcessing,
         executeMarketTrade,
         placeLimitOrder,
         cancelOrder,

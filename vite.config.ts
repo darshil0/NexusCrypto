@@ -4,11 +4,17 @@ import path from 'path';
 import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || process.env.BASE_PATH || '/';
+
   return {
+    base: basePath,
+    build: {
+      outDir: 'out',
+    },
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve(__dirname, './src'),
       },
     },
     server: {

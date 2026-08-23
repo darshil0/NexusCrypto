@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { DemoProvider } from './context/DemoContext';
-import { Router, Route, useRouter, Link } from './router/Router';
+import { Router, Route, Switch, useRouter, Link } from './router/Router';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { DemoBanner, MobileNav } from './components/layout/DemoBanner';
@@ -69,29 +69,32 @@ export default function App() {
             {/* Main Route Content Outlet */}
             <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-none">
               <ErrorBoundary>
-                <Route path="/" component={HomePage} />
-                <Route path="/markets" component={MarketsPage} />
-                <Route path="/markets/:symbol" component={AssetDetailPage} />
-                <Route path="/trade" component={TradePage} />
-                <Route path="/trade/:pair" component={TradePage} />
-                <Route path="/buy" component={BuySellConvertPage} />
-                <Route path="/sell" component={BuySellConvertPage} />
-                <Route path="/convert" component={BuySellConvertPage} />
-                <Route path="/dashboard" component={DashboardPage} />
-                <Route path="/portfolio" component={DashboardPage} />
-                <Route path="/wallet" component={WalletPage} />
-                <Route path="/history" component={HistoryPage} />
-                <Route path="/watchlist" component={WatchlistAlertsPage} />
-                <Route path="/alerts" component={WatchlistAlertsPage} />
-                <Route path="/learn" component={LearnPage} />
-                <Route path="/learn/:slug" component={LearnArticlePage} />
-                <Route path="/settings" component={SettingsSecurityPage} />
-                <Route path="/security" component={SettingsSecurityPage} />
-                <Route path="/help" component={HelpPage} />
-                <Route path="/faq" component={HelpPage} />
-                <Route path="/legal/risk" component={LegalRiskPage} />
-                <Route path="/legal/terms" component={LegalTermsPage} />
-                <Route path="/legal/privacy" component={LegalPrivacyPage} />
+                <Switch>
+                  <Route path="/" component={HomePage} />
+                  <Route path="/markets" component={MarketsPage} />
+                  <Route path="/markets/:symbol" component={AssetDetailPage} />
+                  <Route path="/trade" component={TradePage} />
+                  <Route path="/trade/:pair" component={TradePage} />
+                  <Route path="/buy" component={BuySellConvertPage} />
+                  <Route path="/sell" component={BuySellConvertPage} />
+                  <Route path="/convert" component={BuySellConvertPage} />
+                  <Route path="/dashboard" component={DashboardPage} />
+                  <Route path="/portfolio" component={DashboardPage} />
+                  <Route path="/wallet" component={WalletPage} />
+                  <Route path="/history" component={HistoryPage} />
+                  <Route path="/watchlist" component={WatchlistAlertsPage} />
+                  <Route path="/alerts" component={WatchlistAlertsPage} />
+                  <Route path="/learn" component={LearnPage} />
+                  <Route path="/learn/:slug" component={LearnArticlePage} />
+                  <Route path="/settings" component={SettingsSecurityPage} />
+                  <Route path="/security" component={SettingsSecurityPage} />
+                  <Route path="/help" component={HelpPage} />
+                  <Route path="/faq" component={HelpPage} />
+                  <Route path="/legal/risk" component={LegalRiskPage} />
+                  <Route path="/legal/terms" component={LegalTermsPage} />
+                  <Route path="/legal/privacy" component={LegalPrivacyPage} />
+                  <NotFoundPage />
+                </Switch>
               </ErrorBoundary>
             </main>
 
