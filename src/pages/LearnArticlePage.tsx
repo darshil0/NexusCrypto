@@ -8,8 +8,6 @@ import {
   CheckCircle2,
   Share2,
   Check,
-  ChevronRight,
-  ShieldAlert,
 } from 'lucide-react';
 import { Badge, Button, Card } from '../components/ui/BaseComponents';
 

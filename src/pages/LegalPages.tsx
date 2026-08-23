@@ -1,6 +1,6 @@
 import React from 'react';
-import { useRouter, Link } from '../router/Router';
-import { ShieldAlert, FileText, Lock, AlertTriangle, ArrowLeft } from 'lucide-react';
+import { Link } from '../router/Router';
+import { ShieldAlert, ArrowLeft } from 'lucide-react';
 import { Badge, Card } from '../components/ui/BaseComponents';
 
 export const LegalRiskPage: React.FC = () => {

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useDemo } from '../context/DemoContext';
-import { formatUSD, formatCrypto, formatPercent } from '../utils/formatters';
+import { formatUSD, formatCrypto } from '../utils/formatters';
 import { Link } from '../router/Router';
 import {
-  Wallet,
   ArrowDownLeft,
   ArrowUpRight,
   Copy,
@@ -11,9 +10,6 @@ import {
   QrCode,
   ShieldCheck,
   RotateCcw,
-  AlertCircle,
-  Sparkles,
-  ExternalLink,
   ShieldAlert,
 } from 'lucide-react';
 import { Badge, Button, Card, Modal } from '../components/ui/BaseComponents';
@@ -25,7 +21,6 @@ export const WalletPage: React.FC = () => {
     simulateDeposit,
     simulateWithdrawal,
     resetDemoData,
-    settings,
   } = useDemo();
 
   // Deposit Modal State
@@ -40,7 +35,7 @@ export const WalletPage: React.FC = () => {
   const [withdrawAsset, setWithdrawAsset] = useState<string>('BTC');
   const [withdrawAmount, setWithdrawAmount] = useState<string>('');
   const [withdrawAddress, setWithdrawAddress] = useState<string>('');
-  const [withdrawNetwork, setWithdrawNetwork] = useState<string>('Bitcoin Mainnet');
+  const [withdrawNetwork] = useState<string>('Bitcoin Mainnet');
   const [mockMfaCode, setMockMfaCode] = useState<string>('123456');
 
   // Networks mapping

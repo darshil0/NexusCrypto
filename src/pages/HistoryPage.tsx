@@ -3,14 +3,7 @@ import { useDemo } from '../context/DemoContext';
 import { formatUSD, formatCrypto, formatTimestamp, exportToCSV } from '../utils/formatters';
 import {
   Download,
-  Filter,
   Search,
-  ArrowDownLeft,
-  ArrowUpRight,
-  ArrowRightLeft,
-  Activity,
-  Calendar,
-  Layers,
 } from 'lucide-react';
 import { Badge, Button, Card } from '../components/ui/BaseComponents';
 

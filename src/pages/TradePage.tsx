@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDemo } from '../context/DemoContext';
-import { useRouter, Link } from '../router/Router';
+import { useRouter } from '../router/Router';
 import { TRADING_PAIRS } from '../data/mockData';
 import { formatUSD, formatPercent, formatCompactNumber } from '../utils/formatters';
 import { TradingChart } from '../components/trade/TradingChart';
@@ -9,15 +9,8 @@ import { RecentTrades } from '../components/trade/RecentTrades';
 import { OrderForm } from '../components/trade/OrderForm';
 import { OrdersTable } from '../components/trade/OrdersTable';
 import {
-  Activity,
   ChevronDown,
-  TrendingUp,
-  TrendingDown,
-  ShieldAlert,
   RotateCcw,
-  Sparkles,
-  Info,
-  Maximize2,
 } from 'lucide-react';
 import { Badge } from '../components/ui/BaseComponents';
 

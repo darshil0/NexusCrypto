@@ -12,7 +12,7 @@ interface PageErrorStateProps {
 export const PageErrorState: React.FC<PageErrorStateProps> = ({
   title = 'Content Not Available',
   message = 'The requested resource, asset, or trading pair could not be found or loaded.',
-  suggestedAction = 'dashboard',
+  suggestedAction: _suggestedAction = 'dashboard',
   onRetry,
 }) => {
   const { navigate } = useRouter();

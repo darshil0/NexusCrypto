@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDemo } from '../../context/DemoContext';
 import { formatUSD, formatCrypto, formatTimestamp } from '../../utils/formatters';
 import { Badge, Button } from '../ui/BaseComponents';
-import { Trash2, CheckCircle2, Clock, XCircle } from 'lucide-react';
+import { Trash2, Clock } from 'lucide-react';
 
 export const OrdersTable: React.FC = () => {
   const { orders, cancelOrder } = useDemo();

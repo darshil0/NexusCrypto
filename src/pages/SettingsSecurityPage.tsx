@@ -3,16 +3,13 @@ import { useDemo } from '../context/DemoContext';
 import {
   Settings,
   Shield,
-  Lock,
   Smartphone,
   RotateCcw,
   Sun,
   Moon,
   Laptop,
-  CheckCircle2,
   AlertTriangle,
   KeyRound,
-  Trash2,
 } from 'lucide-react';
 import { Badge, Button, Card, Modal } from '../components/ui/BaseComponents';
 
