@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Quick Alerts Dropdown**: Header dropdown allowing users to view active vs. triggered alerts, inspect distances to targets (`% to target`), test alerts, re-arm triggered triggers, and set new price alerts without leaving the page.
 - **Market Movement Simulator**: Interactive control panel in `/watchlist` enabling users to simulate market movements (e.g. +5% pumps or -5% dumps) to test alert triggers in real time.
 - **Price Alerts Unit Tests**: Vitest test suite (`src/__tests__/price-alerts.test.ts`) validating threshold conditions, state transitions, and re-arming behavior.
+- **CI/CD Pipeline Hardening**: Streamlined `.github/workflows/ci.yml` and `.github/workflows/deploy.yml` with Node.js LTS 20 setup, npm dependency caching with `package-lock.json`, npm security audits, TypeScript typechecking, code coverage reports, automated `404.html` SPA routing fallbacks, and concurrency management.
 
 ## [0.2.0] - 2026-08-22
 

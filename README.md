@@ -107,8 +107,22 @@ NEXT_PUBLIC_BASE_PATH=/nexus-crypto npm run build
 3. Build Command: `npm run build`
 4. Output Directory: `out`
 
-### GitHub Pages
-A GitHub Actions workflow (`.github/workflows/deploy.yml`) is included. It automatically builds, runs typecheck, tests, and deploys the generated `out/` directory to GitHub Pages on every push to `main` or `master`.
+### GitHub Actions & CI/CD Pipelines
+
+The repository includes dual GitHub Actions workflows configured under `.github/workflows/`:
+
+- **CI Pipeline (`.github/workflows/ci.yml`)**:
+  - Triggers on every push and pull request targeted to `main` or `master`.
+  - Configures Node.js 20 LTS with cached dependencies via `package-lock.json`.
+  - Runs clean installation (`npm ci`), code quality & style checks (`npm run lint`), strict TypeScript type verification (`npm run typecheck`), full Vitest unit/integration test suites (`npm run test`), and production build verification.
+  - Concurrency group `ci-${{ github.ref }}` automatically cancels obsolete in-progress runs on new commits.
+
+- **GitHub Pages Deployment Pipeline (`.github/workflows/deploy.yml`)**:
+  - Triggers on merges to `main`/`master` or via manual dispatch (`workflow_dispatch`).
+  - Executes security audits (`npm audit --audit-level=high`), ESLint checks, TypeScript typechecks, and test coverage runs (`npm run test -- --coverage`).
+  - Builds the production static export (`out/`) tailored for GitHub Pages with dynamic base path mapping (`NEXT_PUBLIC_BASE_PATH`).
+  - Automatically provisions `out/404.html` (for client-side routing fallback) and `out/.nojekyll` (to bypass Jekyll asset filters).
+  - Validates static artifact integrity and deploys securely via `actions/deploy-pages@v4` with atomic concurrency controls (`cancel-in-progress: false`).
 
 ---
 
