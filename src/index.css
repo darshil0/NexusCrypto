@@ -1,6 +1,25 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
+  color-scheme: light;
+
+  --bg-sleek-main: #f8fafc;
+  --bg-sleek-card: #ffffff;
+  --bg-sleek-input: #f1f5f9;
+  --border-sleek: #e2e8f0;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+
+  --scrollbar-track: #f1f5f9;
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-thumb-hover: #94a3b8;
+}
+
+html.dark {
   color-scheme: dark;
 
   --bg-sleek-main: #0b0e11;
@@ -9,6 +28,9 @@
   --border-sleek: #1f242b;
 
   --text-primary: #f3f4f6;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+
   --scrollbar-track: #0b0e11;
   --scrollbar-thumb: #232932;
   --scrollbar-thumb-hover: #374151;
@@ -17,6 +39,7 @@
 html {
   min-height: 100%;
   background-color: var(--bg-sleek-main);
+  color: var(--text-primary);
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   scrollbar-width: thin;
 }
@@ -69,9 +92,9 @@ textarea {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb);
   border: 1px solid var(--scrollbar-track);
   border-radius: 9999px;
+  background: var(--scrollbar-thumb);
 }
 
 ::-webkit-scrollbar-thumb:hover {
