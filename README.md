@@ -133,6 +133,7 @@ The repository includes dual GitHub Actions workflows configured under `.github/
 nexus-crypto/
 ├── .github/workflows/  # GitHub Actions CI/CD workflows
 ├── out/                # Build output directory (static export)
+├── public/             # Static public assets (favicons, etc.)
 ├── src/
 │   ├── components/     # UI components (dashboard, trade, feedback, layout, ui)
 │   ├── context/        # DemoContext global state management & testing
