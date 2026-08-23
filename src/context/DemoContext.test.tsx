@@ -175,6 +175,51 @@ describe('DemoContext State and Operations', () => {
     expect(Number(screen.getByTestId('usd-balance').textContent)).toBe(28995); // 30000 - 1000 - 5 fee
   });
 
+  it('validates deposit caps and withdrawal addresses in context actions', () => {
+    let result: any;
+    const TestValidationComponent: React.FC = () => {
+      const { simulateDeposit, simulateWithdrawal } = useDemo();
+      return (
+        <div>
+          <button
+            data-testid="invalid-deposit-btn"
+            onClick={() => {
+              result = simulateDeposit('USD', 50000000, 'Bank');
+            }}
+          >
+            Deposit Too Much
+          </button>
+          <button
+            data-testid="invalid-withdrawal-btn"
+            onClick={() => {
+              result = simulateWithdrawal('USD', 10, 'short', 'ACH');
+            }}
+          >
+            Invalid Address Withdrawal
+          </button>
+        </div>
+      );
+    };
+
+    render(
+      <DemoProvider>
+        <TestValidationComponent />
+      </DemoProvider>
+    );
+
+    act(() => {
+      screen.getByTestId('invalid-deposit-btn').click();
+    });
+    expect(result.success).toBe(false);
+    expect(result.error).toContain('cannot exceed');
+
+    act(() => {
+      screen.getByTestId('invalid-withdrawal-btn').click();
+    });
+    expect(result.success).toBe(false);
+    expect(result.error).toContain('too short');
+  });
+
   it('resets demo data to defaults', () => {
     render(
       <DemoProvider>

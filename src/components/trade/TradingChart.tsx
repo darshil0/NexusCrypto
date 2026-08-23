@@ -57,8 +57,9 @@ export const TradingChart: React.FC<TradingChartProps> = ({
         : 86400000 * 7;
 
     const data: CandleData[] = [];
-    const now = Date.now();
-    let current = basePrice * (timeframe === '1Y' ? 0.65 : timeframe === '30D' ? 0.88 : timeframe === '7D' ? 0.96 : (1 - (change24h / 100)));
+    // Fixed reference timestamp for deterministic rendering
+    const now = 1735689600000;
+    const current = basePrice * (timeframe === '1Y' ? 0.65 : timeframe === '30D' ? 0.88 : timeframe === '7D' ? 0.96 : (1 - (change24h / 100)));
 
     // Deterministic pseudo-random seed using symbol code
     let seed = symbol.split('').reduce((acc, c) => acc + c.charCodeAt(0), 42);

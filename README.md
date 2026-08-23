@@ -158,4 +158,5 @@ The client router in `src/router/Router.tsx` automatically resolves asset links 
 
 - **Simulated Market Feeds**: Prices fluctuate pseudo-randomly for demonstration purposes; no live WebSocket feed or external API is connected.
 - **Frontend-Only Persistence**: All data remains in the user's local browser storage. Clearing browser data will reset state.
+- **Multi-Tab Synchronization**: Cross-tab state synchronization listens to window `storage` events and updates top-level state slices on a last-write-wins basis. Concurrent rapid trades in multiple open tabs may overwrite state slices without merging.
 - **No Real Transactions**: Deposits, withdrawals, buy/sell trades, and support tickets are mock actions.

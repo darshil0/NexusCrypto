@@ -71,12 +71,13 @@ export function calculateConvertQuote(
 
 export function validateBalance(
   availableBalance: number,
-  requiredAmount: number
+  requiredAmount: number,
+  epsilon = 1e-8
 ): { valid: boolean; error?: string; shortfall?: number } {
   if (requiredAmount <= 0) {
     return { valid: false, error: 'Amount must be greater than zero.' };
   }
-  if (requiredAmount > availableBalance) {
+  if (requiredAmount > availableBalance + epsilon) {
     const shortfall = Number((requiredAmount - availableBalance).toFixed(6));
     return {
       valid: false,
@@ -147,7 +148,7 @@ export function calculatePortfolioSummary(
       const val = totalAssetAmount * price;
       totalValueUSD += val;
 
-      const avgBuy = bal.avgBuyPrice || price;
+      const avgBuy = bal.avgBuyPrice ?? price;
       const costBasis = totalAssetAmount * avgBuy;
       totalCostBasisUSD += costBasis;
 

@@ -30,6 +30,12 @@ import { formatUSD } from '../utils/formatters';
 
 import { safeStorage } from '../lib/errors/safe-storage';
 import { createAppError } from '../lib/errors/error-messages';
+import {
+  validatePositiveNumber,
+  validateWithdrawalAddress,
+  validateOrderNotional,
+  validatePrecision,
+} from '../lib/errors/validation';
 
 interface ToastItem {
   id: string;
@@ -202,7 +208,9 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const [activePair, setActivePair] = useState<string>('BTC/USD');
 
-  // Multi-tab storage sync
+  // Multi-tab storage sync:
+  // Re-hydrates state slices from storage events across browser tabs.
+  // Note: Operates on a last-write-wins basis for top-level state slices.
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
       if (!e.key || !e.newValue) return;
@@ -285,7 +293,7 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const interval = setInterval(() => {
       setAssets((prevAssets) => {
         const next = { ...prevAssets };
-        let anyAlertTriggered = false;
+        const anyAlertTriggered = false;
 
         Object.keys(next).forEach((sym) => {
           const current = next[sym];
@@ -408,7 +416,7 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
             };
 
             const prevAmount = currentBase.amount || 0;
-            const prevCost = prevAmount * (currentBase.avgBuyPrice || ord.price);
+            const prevCost = prevAmount * (currentBase.avgBuyPrice ?? ord.price);
             const newTotalAmount = prevAmount + ord.amount;
             const newAvgBuy = newTotalAmount > 0 ? (prevCost + ord.total) / newTotalAmount : ord.price;
 
@@ -470,27 +478,39 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const asset = assets[baseAsset];
 
       if (!asset) return { success: false, error: 'Asset not found' };
-      if (amount <= 0) return { success: false, error: 'Enter a valid amount' };
+
+      const amountValidation = validatePositiveNumber(amount, 'Amount');
+      if (!amountValidation.isValid) return { success: false, error: amountValidation.errorMessage };
+
+      const precisionValidation = validatePrecision(amount, (baseAsset as string) === 'USD' ? 2 : 8);
+      if (!precisionValidation.isValid) return { success: false, error: precisionValidation.errorMessage };
 
       const currentPrice = asset.price;
+      const notionalValidation = validateOrderNotional(amount, currentPrice);
+      if (!notionalValidation.isValid) return { success: false, error: notionalValidation.errorMessage };
+
       const totalCost = amount * currentPrice;
       const fee = calculateTradeFee(totalCost);
 
-      if (side === 'buy') {
-        const quoteBalance = balances[quoteAsset]?.amount || 0;
-        const totalRequired = totalCost + fee;
-        const validation = validateBalance(quoteBalance, totalRequired);
-        if (!validation.valid) {
-          return { success: false, error: validation.error };
-        }
+      let tradeError: string | undefined;
 
-        // Deduct Quote, Add Base
+      if (side === 'buy') {
+        const totalRequired = totalCost + fee;
+
+        // Deduct Quote, Add Base atomically
         setBalances((prev) => {
+          const quoteBalance = prev[quoteAsset]?.amount || 0;
+          const validation = validateBalance(quoteBalance, totalRequired);
+          if (!validation.valid) {
+            tradeError = validation.error;
+            return prev;
+          }
+
           const currentQuote = prev[quoteAsset] || { symbol: quoteAsset as any, name: quoteAsset, amount: 0, lockedInOrders: 0 };
           const currentBase = prev[baseAsset] || { symbol: baseAsset, name: asset.name, amount: 0, lockedInOrders: 0 };
 
           const prevAmount = currentBase.amount || 0;
-          const prevCost = prevAmount * (currentBase.avgBuyPrice || currentPrice);
+          const prevCost = prevAmount * (currentBase.avgBuyPrice ?? currentPrice);
           const newTotalAmount = prevAmount + amount;
           const newAvgPrice = newTotalAmount > 0 ? (prevCost + totalCost) / newTotalAmount : currentPrice;
 
@@ -509,14 +529,15 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
       } else {
         // Sell
-        const baseBalance = balances[baseAsset]?.amount || 0;
-        const validation = validateBalance(baseBalance, amount);
-        if (!validation.valid) {
-          return { success: false, error: validation.error };
-        }
-
         const netReceived = totalCost - fee;
         setBalances((prev) => {
+          const baseBalance = prev[baseAsset]?.amount || 0;
+          const validation = validateBalance(baseBalance, amount);
+          if (!validation.valid) {
+            tradeError = validation.error;
+            return prev;
+          }
+
           const currentBase = prev[baseAsset] || { symbol: baseAsset, name: asset.name, amount: 0, lockedInOrders: 0 };
           const currentQuote = prev[quoteAsset] || { symbol: quoteAsset as any, name: quoteAsset, amount: 0, lockedInOrders: 0 };
 
@@ -532,6 +553,10 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
             },
           };
         });
+      }
+
+      if (tradeError) {
+        return { success: false, error: tradeError };
       }
 
       const orderId = `ord-${Date.now()}`;
@@ -597,19 +622,36 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const asset = assets[baseAsset];
 
       if (!asset) return { success: false, error: 'Asset not found' };
-      if (amount <= 0 || limitPrice <= 0) return { success: false, error: 'Enter valid price and amount' };
+
+      const amountValidation = validatePositiveNumber(amount, 'Amount');
+      if (!amountValidation.isValid) return { success: false, error: amountValidation.errorMessage };
+
+      const priceValidation = validatePositiveNumber(limitPrice, 'Limit price');
+      if (!priceValidation.isValid) return { success: false, error: priceValidation.errorMessage };
+
+      const precisionValidation = validatePrecision(amount, (baseAsset as string) === 'USD' ? 2 : 8);
+      if (!precisionValidation.isValid) return { success: false, error: precisionValidation.errorMessage };
+
+      const notionalValidation = validateOrderNotional(amount, limitPrice);
+      if (!notionalValidation.isValid) return { success: false, error: notionalValidation.errorMessage };
 
       const totalCost = amount * limitPrice;
       const fee = calculateTradeFee(totalCost);
 
-      if (side === 'buy') {
-        const quoteBalance = balances[quoteAsset]?.amount || 0;
-        const totalRequired = totalCost + fee;
-        const validation = validateBalance(quoteBalance, totalRequired);
-        if (!validation.valid) return { success: false, error: validation.error };
+      let orderError: string | undefined;
 
-        // Lock funds
+      if (side === 'buy') {
+        const totalRequired = totalCost + fee;
+
+        // Lock funds atomically
         setBalances((prev) => {
+          const quoteBalance = prev[quoteAsset]?.amount || 0;
+          const validation = validateBalance(quoteBalance, totalRequired);
+          if (!validation.valid) {
+            orderError = validation.error;
+            return prev;
+          }
+
           const currentQuote = prev[quoteAsset] || { symbol: quoteAsset as any, name: quoteAsset, amount: 0, lockedInOrders: 0 };
           return {
             ...prev,
@@ -621,12 +663,15 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
           };
         });
       } else {
-        const baseBalance = balances[baseAsset]?.amount || 0;
-        const validation = validateBalance(baseBalance, amount);
-        if (!validation.valid) return { success: false, error: validation.error };
-
-        // Lock crypto
+        // Lock crypto atomically
         setBalances((prev) => {
+          const baseBalance = prev[baseAsset]?.amount || 0;
+          const validation = validateBalance(baseBalance, amount);
+          if (!validation.valid) {
+            orderError = validation.error;
+            return prev;
+          }
+
           const currentBase = prev[baseAsset] || { symbol: baseAsset, name: asset.name, amount: 0, lockedInOrders: 0 };
           return {
             ...prev,
@@ -638,6 +683,8 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
           };
         });
       }
+
+      if (orderError) return { success: false, error: orderError };
 
       const orderId = `ord-lim-${Date.now()}`;
       const newOrder: Order = {
@@ -721,11 +768,12 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const executeConvert = useCallback(
     (fromSymbol: string, toSymbol: string, fromAmount: number) => {
       if (fromSymbol === toSymbol) return { success: false, error: 'Cannot convert an asset into itself' };
-      if (fromAmount <= 0) return { success: false, error: 'Enter a valid conversion amount' };
 
-      const available = balances[fromSymbol]?.amount || 0;
-      const validation = validateBalance(available, fromAmount);
-      if (!validation.valid) return { success: false, error: validation.error };
+      const amountValidation = validatePositiveNumber(fromAmount, 'Conversion amount');
+      if (!amountValidation.isValid) return { success: false, error: amountValidation.errorMessage };
+
+      const precisionValidation = validatePrecision(fromAmount, fromSymbol === 'USD' ? 2 : 8);
+      if (!precisionValidation.isValid) return { success: false, error: precisionValidation.errorMessage };
 
       const prices: Record<string, number> = {};
       Object.keys(assets).forEach((k) => {
@@ -735,7 +783,16 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const quote = calculateConvertQuote(fromSymbol, toSymbol, fromAmount, prices);
 
+      let convertError: string | undefined;
+
       setBalances((prev) => {
+        const available = prev[fromSymbol]?.amount || 0;
+        const validation = validateBalance(available, fromAmount);
+        if (!validation.valid) {
+          convertError = validation.error;
+          return prev;
+        }
+
         const fromBal = prev[fromSymbol] || { symbol: fromSymbol as any, name: fromSymbol, amount: 0, lockedInOrders: 0 };
         const toBal = prev[toSymbol] || { symbol: toSymbol as any, name: toSymbol, amount: 0, lockedInOrders: 0 };
 
@@ -755,6 +812,8 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
           },
         };
       });
+
+      if (convertError) return { success: false, error: convertError };
 
       const tx: Transaction = {
         id: `tx-cnv-${Date.now()}`,
@@ -795,7 +854,11 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Deposit Simulation
   const simulateDeposit = useCallback(
     (asset: string, amount: number, network: string) => {
-      if (amount <= 0) return { success: false, error: 'Deposit amount must be positive' };
+      const amountValidation = validatePositiveNumber(amount, 'Deposit amount', 0.00000001, 10000000);
+      if (!amountValidation.isValid) return { success: false, error: amountValidation.errorMessage };
+
+      const precisionValidation = validatePrecision(amount, asset === 'USD' ? 2 : 8);
+      if (!precisionValidation.isValid) return { success: false, error: precisionValidation.errorMessage };
 
       setBalances((prev) => {
         const current = prev[asset] || { symbol: asset as any, name: asset, amount: 0, lockedInOrders: 0 };
@@ -848,24 +911,34 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Withdrawal Simulation
   const simulateWithdrawal = useCallback(
     (asset: string, amount: number, address: string, network: string) => {
-      if (amount <= 0) return { success: false, error: 'Enter a valid amount greater than zero' };
-      if (!address || address.trim().length < 6) return { success: false, error: 'Enter a valid destination wallet address' };
+      const amountValidation = validatePositiveNumber(amount, 'Withdrawal amount');
+      if (!amountValidation.isValid) return { success: false, error: amountValidation.errorMessage };
 
-      const available = balances[asset]?.amount || 0;
+      const precisionValidation = validatePrecision(amount, asset === 'USD' ? 2 : 8);
+      if (!precisionValidation.isValid) return { success: false, error: precisionValidation.errorMessage };
+
+      const addressValidation = validateWithdrawalAddress(address, network);
+      if (!addressValidation.isValid) return { success: false, error: addressValidation.errorMessage };
+
       const fee = asset === 'USD' ? 5.00 : asset === 'BTC' ? 0.0002 : asset === 'ETH' ? 0.002 : 0.01;
-      const totalDeducted = amount + (asset === 'USD' ? fee : fee);
+      const totalDeducted = amount + fee;
 
-      if (asset === 'USD') {
-        if (available < totalDeducted) {
-          return { success: false, error: `Available balance ($${available.toFixed(2)}) does not cover withdrawal ($${amount.toFixed(2)}) + network fee ($${fee.toFixed(2)})` };
-        }
-      } else {
-        if (available < totalDeducted) {
-          return { success: false, error: `Available balance (${available} ${asset}) does not cover withdrawal (${amount} ${asset}) + simulated network fee (${fee} ${asset})` };
-        }
-      }
+      let withdrawError: string | undefined;
 
       setBalances((prev) => {
+        const available = prev[asset]?.amount || 0;
+        if (asset === 'USD') {
+          if (available < totalDeducted) {
+            withdrawError = `Available balance ($${available.toFixed(2)}) does not cover withdrawal ($${amount.toFixed(2)}) + network fee ($${fee.toFixed(2)})`;
+            return prev;
+          }
+        } else {
+          if (available < totalDeducted) {
+            withdrawError = `Available balance (${available} ${asset}) does not cover withdrawal (${amount} ${asset}) + simulated network fee (${fee} ${asset})`;
+            return prev;
+          }
+        }
+
         const current = prev[asset] || { symbol: asset as any, name: asset, amount: 0, lockedInOrders: 0 };
         return {
           ...prev,
@@ -875,6 +948,8 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
           },
         };
       });
+
+      if (withdrawError) return { success: false, error: withdrawError };
 
       const price = asset === 'USD' ? 1 : (assets[asset]?.price || 0);
       const totalUSD = amount * price;

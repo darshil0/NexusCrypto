@@ -182,7 +182,7 @@ export const Link: React.FC<{
 }> = ({ to, children, className = '', id, title, onClick, activeClassName = '' }) => {
   const { path, navigate } = useRouter();
   const normalizedTo = normalizePath(to);
-  const isActive = path === normalizedTo || (normalizedTo !== '/' && path.startsWith(normalizedTo));
+  const isActive = path === normalizedTo || (normalizedTo !== '/' && path.startsWith(normalizedTo + '/'));
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
