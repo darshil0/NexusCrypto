@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import confetti from 'canvas-confetti';
-import {
+import type {
   CryptoAsset,
   WalletBalance,
   Order,
@@ -22,9 +22,9 @@ import {
   calculateConvertQuote,
   calculatePortfolioSummary,
   calculateTradeFee,
-  PortfolioSummary,
   validateBalance,
 } from '../utils/calculations';
+import type { PortfolioSummary } from '../utils/calculations';
 import { formatUSD } from '../utils/formatters';
 
 import { safeStorage } from '../lib/errors/safe-storage';

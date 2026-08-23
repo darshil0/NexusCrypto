@@ -6,7 +6,7 @@ import {
   calculatePortfolioSummary,
   SIMULATED_FEE_RATE,
 } from '../utils/calculations';
-import { CryptoAsset, WalletBalance } from '../types';
+import type { CryptoAsset, WalletBalance } from '../types';
 
 describe('Financial Calculations', () => {
   describe('calculateTradeFee', () => {

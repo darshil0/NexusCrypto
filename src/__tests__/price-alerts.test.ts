@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { PriceAlert } from '../types';
+import type { PriceAlert } from '../types';
 
 describe('Price Alerts Logic & Rules', () => {
   it('identifies when an above trigger is reached or exceeded', () => {

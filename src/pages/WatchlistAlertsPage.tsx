@@ -19,7 +19,7 @@ import { Badge, Button, Card } from '../components/ui/BaseComponents';
 import { InlineFieldError } from '../components/feedback/inline-field-error';
 import { AppErrorAlert } from '../components/feedback/app-error-alert';
 import { validatePositiveNumber } from '../lib/errors/validation';
-import { AssetSymbol } from '../types';
+import type { AssetSymbol } from '../types';
 
 export const WatchlistAlertsPage: React.FC = () => {
   const {
@@ -485,10 +485,10 @@ export const WatchlistAlertsPage: React.FC = () => {
                   }}
                   className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white font-bold"
                 >
-                  {Object.keys(assets).map((sym) => (
+                  {Object.entries(assets).map(([sym, asset]) => (
                     <option key={sym} value={sym}>
-                      {assets[sym].name} ({sym}) -{' '}
-                      {formatUSD(assets[sym].price, sym === 'USDC' || sym === 'XRP' ? 4 : 2)}
+                      {asset.name} ({sym}) -{' '}
+                      {formatUSD(asset.price, sym === 'USDC' || sym === 'XRP' ? 4 : 2)}
                     </option>
                   ))}
                 </select>
@@ -542,7 +542,7 @@ export const WatchlistAlertsPage: React.FC = () => {
                     setTargetPrice(e.target.value);
                     if (fieldError) setFieldError(null);
                   }}
-                  placeholder={`e.g. ${(currentAsset?.price * 1.05 || 1000).toFixed(2)}`}
+                  placeholder={`e.g. ${(((currentAsset?.price ?? 1000) * 1.05)).toFixed(2)}`}
                   className={`w-full bg-slate-950 border rounded-lg p-2.5 text-white font-mono ${
                     fieldError ? 'border-red-500 focus:ring-1 focus:ring-red-500' : 'border-slate-700'
                   }`}
@@ -614,9 +614,9 @@ export const WatchlistAlertsPage: React.FC = () => {
                   onChange={(e) => setSimSymbol(e.target.value as AssetSymbol)}
                   className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-bold"
                 >
-                  {Object.keys(assets).map((sym) => (
+                  {Object.entries(assets).map(([sym, asset]) => (
                     <option key={sym} value={sym}>
-                      {sym} - {formatUSD(assets[sym].price)}
+                      {sym} - {formatUSD(asset.price)}
                     </option>
                   ))}
                 </select>

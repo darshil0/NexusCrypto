@@ -118,8 +118,7 @@ export const WalletPage: React.FC = () => {
 
       {/* Wallet Balances Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Object.keys(balances).map((sym) => {
-          const bal = balances[sym];
+        {Object.entries(balances).map(([sym, bal]) => {
           const isUSD = sym === 'USD';
           const assetObj = isUSD ? null : assets[sym];
           const price = isUSD ? 1 : assetObj?.price || 0;
@@ -207,7 +206,7 @@ export const WalletPage: React.FC = () => {
           <span>Self-Custody vs Exchange Custody Education</span>
         </div>
         <p className="text-slate-300 text-sm leading-relaxed max-w-4xl">
-          In this simulated sandbox, balances reside securely in your local browser state. In the real crypto ecosystem, "Not your keys, not your coins" is the golden rule. When keeping crypto on centralized exchanges, the exchange controls the private keys; when using non-custodial hardware wallets (like Ledger or Trezor), you maintain 100% sovereign control over your seed phrase.
+          In this simulated sandbox, balances reside securely in your local browser state. In the real crypto ecosystem, &ldquo;Not your keys, not your coins&rdquo; is the golden rule. When keeping crypto on centralized exchanges, the exchange controls the private keys; when using non-custodial hardware wallets (like Ledger or Trezor), you maintain 100% sovereign control over your seed phrase.
         </p>
         <div className="pt-2">
           <Link to="/learn/how-crypto-wallets-work" className="text-xs font-bold text-indigo-400 hover:text-indigo-300">
@@ -291,7 +290,7 @@ export const WalletPage: React.FC = () => {
 
           {/* Disclaimer */}
           <div className="p-3 bg-amber-950/30 border border-amber-900/40 rounded-lg text-amber-300 text-xs">
-            ⚠️ <strong>Sandbox Faucet:</strong> Clicking "Credit Sandbox Balance" will instantly top up your virtual funds.
+            ⚠️ <strong>Sandbox Faucet:</strong> Clicking &ldquo;Credit Sandbox Balance&rdquo; will instantly top up your virtual funds.
           </div>
 
           <Button

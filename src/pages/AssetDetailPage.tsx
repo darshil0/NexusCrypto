@@ -20,8 +20,15 @@ export const AssetDetailPage: React.FC = () => {
   const { assets, watchlist, toggleWatchlist, balances } = useDemo();
 
   const symbol = (params.symbol || 'BTC').toUpperCase();
-  const asset = assets[symbol] || assets['BTC'];
+  const asset = assets[symbol] || assets['BTC'] || Object.values(assets)[0];
 
+  if (!asset) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-16 text-center text-slate-400">
+        Asset not found.
+      </div>
+    );
+  }
 
   const isWatched = watchlist.includes(asset.symbol);
   const isPos = asset.change24h >= 0;

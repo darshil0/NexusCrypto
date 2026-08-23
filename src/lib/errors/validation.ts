@@ -1,4 +1,4 @@
-import { AppError } from './error-codes';
+import type { AppError } from './error-codes';
 import { createAppError } from './error-messages';
 
 export interface ValidationResult {
@@ -73,7 +73,8 @@ export function validatePrecision(value: string | number, maxDecimals: number): 
   const str = String(value);
   if (!str.includes('.')) return { isValid: true };
 
-  const decimals = str.split('.')[1].length;
+  const parts = str.split('.');
+  const decimals = parts[1] ? parts[1].length : 0;
   if (decimals > maxDecimals) {
     return {
       isValid: false,

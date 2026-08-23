@@ -1,4 +1,4 @@
-import { CryptoAsset, LearnArticle, GlossaryTerm, QuizQuestion } from '../types';
+import type { CryptoAsset, LearnArticle, GlossaryTerm, QuizQuestion } from '../types';
 
 export const INITIAL_ASSETS: Record<string, CryptoAsset> = {
   BTC: {

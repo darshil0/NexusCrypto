@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import '@testing-library/jest-dom';
-import React from 'react';
 import { AppErrorAlert } from '../components/feedback/app-error-alert';
 import { ErrorBoundary } from '../lib/errors/error-boundary';
 import { createAppError } from '../lib/errors/error-messages';

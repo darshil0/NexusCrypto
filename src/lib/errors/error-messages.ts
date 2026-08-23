@@ -1,4 +1,4 @@
-import { AppErrorCode, AppError } from './error-codes';
+import type { AppErrorCode, AppError } from './error-codes';
 
 export const ERROR_CATALOG: Record<AppErrorCode, AppError> = {
   UNKNOWN_ERROR: {

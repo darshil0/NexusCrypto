@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { CryptoAsset } from '../../types';
+import type { CryptoAsset } from '../../types';
 import { useDemo } from '../../context/DemoContext';
 import { formatUSD, formatPercent, formatCompactNumber } from '../../utils/formatters';
 import { useRouter } from '../../router/Router';

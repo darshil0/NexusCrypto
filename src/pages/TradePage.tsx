@@ -35,8 +35,19 @@ export const TradePage: React.FC = () => {
     }
   }, [params.pair]);
 
-  const [baseSymbol, quoteSymbol] = activePair.split('/');
-  const asset = assets[baseSymbol] || assets['BTC'];
+  const parts = activePair.split('/');
+  const baseSymbol = parts[0] || 'BTC';
+  const quoteSymbol = parts[1] || 'USD';
+  const asset = assets[baseSymbol] || assets['BTC'] || Object.values(assets)[0];
+
+  if (!asset) {
+    return (
+      <div className="flex-1 p-8 text-center text-slate-400">
+        Trading terminal asset unavailable.
+      </div>
+    );
+  }
+
   const isPos = asset.change24h >= 0;
 
   const handleSelectPair = (pair: string) => {

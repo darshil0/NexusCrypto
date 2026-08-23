@@ -22,8 +22,17 @@ export const LearnArticlePage: React.FC = () => {
   const [selectedQuizOption, setSelectedQuizOption] = useState<number | null>(null);
   const [hasSubmittedQuiz, setHasSubmittedQuiz] = useState(false);
 
-  const relatedArticles = LEARN_ARTICLES.filter((a) => a.slug !== article.slug).slice(0, 2);
   const quiz = QUIZ_QUESTIONS[0];
+
+  if (!article) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-10 text-center text-slate-400">
+        Article not found.
+      </div>
+    );
+  }
+
+  const relatedArticles = LEARN_ARTICLES.filter((a) => a.slug !== article.slug).slice(0, 2);
 
   const handleShare = () => {
     navigator.clipboard?.writeText(window.location.href);
@@ -93,58 +102,61 @@ export const LearnArticlePage: React.FC = () => {
       </article>
 
       {/* Micro Checkpoint Question */}
-      <Card className="p-6 space-y-4 bg-slate-900/90 border-slate-800">
-        <h4 className="text-sm font-bold text-white flex items-center gap-2">
-          <BookOpen className="w-4 h-4 text-emerald-400" />
-          <span>Quick Knowledge Check: {quiz.question}</span>
-        </h4>
+      {quiz && (
+        <Card className="p-6 space-y-4 bg-slate-900/90 border-slate-800">
+          <h4 className="text-sm font-bold text-white flex items-center gap-2">
+            <BookOpen className="w-4 h-4 text-emerald-400" />
+            <span>Quick Knowledge Check: {quiz.question}</span>
+          </h4>
 
-        <div className="space-y-2">
-          {quiz.options.map((opt, idx) => {
-            const isSelected = selectedQuizOption === idx;
-            const isCorrect = idx === quiz.correctIndex;
+          <div className="space-y-2">
+            {quiz.options.map((opt, idx) => {
+              const isSelected = selectedQuizOption === idx;
+              const isCorrect = idx === quiz.correctIndex;
 
-            let btnStyle = 'bg-slate-950 text-slate-300 border-slate-800 hover:bg-slate-800';
-            if (hasSubmittedQuiz) {
-              if (isCorrect) {
-                btnStyle = 'bg-emerald-950/40 text-emerald-300 border-emerald-500';
-              } else if (isSelected && !isCorrect) {
-                btnStyle = 'bg-rose-950/40 text-rose-300 border-rose-500';
+              let btnStyle = 'bg-slate-950 text-slate-300 border-slate-800 hover:bg-slate-800';
+              if (hasSubmittedQuiz) {
+                if (isCorrect) {
+                  btnStyle = 'bg-emerald-950/40 text-emerald-300 border-emerald-500';
+                } else if (isSelected && !isCorrect) {
+                  btnStyle = 'bg-rose-950/40 text-rose-300 border-rose-500';
+                }
+              } else if (isSelected) {
+                btnStyle = 'bg-indigo-600/30 text-indigo-300 border-indigo-500';
               }
-            } else if (isSelected) {
-              btnStyle = 'bg-indigo-600/30 text-indigo-300 border-indigo-500';
-            }
 
-            return (
-              <button
-                key={idx}
-                disabled={hasSubmittedQuiz}
-                onClick={() => setSelectedQuizOption(idx)}
-                className={`w-full text-left p-3 rounded-lg text-xs font-medium border transition-colors flex items-center justify-between ${btnStyle}`}
-              >
-                <span>{opt}</span>
-                {hasSubmittedQuiz && isCorrect && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
-              </button>
-            );
-          })}
-        </div>
+              return (
+                <button
+                  key={idx}
+                  type="button"
+                  disabled={hasSubmittedQuiz}
+                  onClick={() => setSelectedQuizOption(idx)}
+                  className={`w-full text-left p-3 rounded-lg text-xs font-medium border transition-colors flex items-center justify-between ${btnStyle}`}
+                >
+                  <span>{opt}</span>
+                  {hasSubmittedQuiz && isCorrect && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
+                </button>
+              );
+            })}
+          </div>
 
-        {!hasSubmittedQuiz ? (
-          <Button
-            size="sm"
-            variant="primary"
-            disabled={selectedQuizOption === null}
-            onClick={() => setHasSubmittedQuiz(true)}
-            className="font-bold"
-          >
-            Check Answer
-          </Button>
-        ) : (
-          <p className="text-xs text-slate-400 pt-1 leading-relaxed">
-            {quiz.explanation}
-          </p>
-        )}
-      </Card>
+          {!hasSubmittedQuiz ? (
+            <Button
+              size="sm"
+              variant="primary"
+              disabled={selectedQuizOption === null}
+              onClick={() => setHasSubmittedQuiz(true)}
+              className="font-bold"
+            >
+              Check Answer
+            </Button>
+          ) : (
+            <p className="text-xs text-slate-400 pt-1 leading-relaxed">
+              {quiz.explanation}
+            </p>
+          )}
+        </Card>
+      )}
 
       {/* Related Guides */}
       <div className="space-y-4 pt-6 border-t border-slate-800">

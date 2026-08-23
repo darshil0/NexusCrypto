@@ -49,8 +49,8 @@ export const BuySellConvertPage: React.FC<{ initialMode?: 'buy' | 'sell' | 'conv
 
   // Active prices map
   const pricesMap: Record<string, number> = {};
-  Object.keys(assets).forEach((k) => {
-    pricesMap[k] = assets[k].price;
+  Object.entries(assets).forEach(([k, a]) => {
+    pricesMap[k] = a.price;
   });
   pricesMap.USD = 1.0;
 
@@ -114,7 +114,7 @@ export const BuySellConvertPage: React.FC<{ initialMode?: 'buy' | 'sell' | 'conv
           title: `Simulated Purchase of ${formatCrypto(quote.toAmount)} ${selectedAsset}`,
           paid: `${formatUSD(numAmount)} USD`,
           received: `${formatCrypto(quote.toAmount)} ${selectedAsset}`,
-          rate: `1 ${selectedAsset} = ${formatUSD(pricesMap[selectedAsset])}`,
+          rate: `1 ${selectedAsset} = ${formatUSD(pricesMap[selectedAsset] || 0)}`,
           fee: `$0.00 (Zero Slippage Demo)`,
         });
         setIsConfirmModalOpen(false);
@@ -130,7 +130,7 @@ export const BuySellConvertPage: React.FC<{ initialMode?: 'buy' | 'sell' | 'conv
           title: `Simulated Sale of ${formatCrypto(numAmount)} ${selectedAsset}`,
           paid: `${formatCrypto(numAmount)} ${selectedAsset}`,
           received: `${formatUSD(quote.toAmount)} USD`,
-          rate: `1 ${selectedAsset} = ${formatUSD(pricesMap[selectedAsset])}`,
+          rate: `1 ${selectedAsset} = ${formatUSD(pricesMap[selectedAsset] || 0)}`,
           fee: `$0.00 (Zero Slippage Demo)`,
         });
         setIsConfirmModalOpen(false);
@@ -239,9 +239,9 @@ export const BuySellConvertPage: React.FC<{ initialMode?: 'buy' | 'sell' | 'conv
                   onChange={(e) => setSelectedAsset(e.target.value)}
                   className="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-bold text-white focus:outline-none"
                 >
-                  {Object.keys(assets).map((sym) => (
+                  {Object.entries(assets).map(([sym, asset]) => (
                     <option key={sym} value={sym}>
-                      {assets[sym].name} ({sym})
+                      {asset.name} ({sym})
                     </option>
                   ))}
                 </select>
@@ -269,9 +269,9 @@ export const BuySellConvertPage: React.FC<{ initialMode?: 'buy' | 'sell' | 'conv
                   onChange={(e) => setSelectedAsset(e.target.value)}
                   className="bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm font-bold text-white focus:outline-none"
                 >
-                  {Object.keys(assets).map((sym) => (
+                  {Object.entries(assets).map(([sym, asset]) => (
                     <option key={sym} value={sym}>
-                      {assets[sym].name} ({sym})
+                      {asset.name} ({sym})
                     </option>
                   ))}
                 </select>
@@ -399,7 +399,7 @@ export const BuySellConvertPage: React.FC<{ initialMode?: 'buy' | 'sell' | 'conv
             <span className="text-slate-200">
               1 {mode === 'buy' ? selectedAsset : mode === 'sell' ? selectedAsset : fromAsset} ={' '}
               {mode === 'buy' || mode === 'sell'
-                ? formatUSD(pricesMap[selectedAsset])
+                ? formatUSD(pricesMap[selectedAsset] || 0)
                 : `${(quote.exchangeRate).toFixed(6)} ${toAsset}`}
             </span>
           </div>

@@ -43,8 +43,6 @@ export type AppErrorCode =
   | 'SUPPORT_TICKET_CREATE_FAILED'
   | 'BUILD_ERROR';
 
-export { createAppError, ERROR_CATALOG } from './error-messages';
-
 export interface AppError {
   code: AppErrorCode;
   title: string;

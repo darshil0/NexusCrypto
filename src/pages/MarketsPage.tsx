@@ -180,7 +180,7 @@ export const MarketsPage: React.FC = () => {
               {filteredAssets.length === 0 ? (
                 <tr>
                   <td colSpan={9} className="py-12 text-center text-slate-500 font-sans">
-                    No matching crypto assets found for "{search}" in {activeCategory}.
+                    No matching crypto assets found for &ldquo;{search}&rdquo; in {activeCategory}.
                   </td>
                 </tr>
               ) : (

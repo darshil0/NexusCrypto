@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDemo } from '../../context/DemoContext';
-import { AssetSymbol, OrderSide, OrderType } from '../../types';
+import type { AssetSymbol, OrderSide, OrderType } from '../../types';
 import { formatUSD, formatCrypto } from '../../utils/formatters';
 import { calculateTradeFee, validateBalance } from '../../utils/calculations';
 import { AlertCircle, ShieldAlert } from 'lucide-react';

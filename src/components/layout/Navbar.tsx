@@ -27,7 +27,7 @@ import {
   ArrowUpRight,
 } from 'lucide-react';
 import { Badge } from '../ui/BaseComponents';
-import { AssetSymbol } from '../../types';
+import type { AssetSymbol } from '../../types';
 
 export const Navbar: React.FC = () => {
   const {

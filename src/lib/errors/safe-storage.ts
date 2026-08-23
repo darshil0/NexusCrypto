@@ -76,14 +76,15 @@ export const safeStorage = {
     try {
       window.localStorage.setItem(key, serialized);
       return true;
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error(`[safeStorage] Failed to persist key "${key}".`, e);
+      const err = e as { name?: string; code?: number } | null;
       // Check if QuotaExceededError
       if (
-        e?.name === 'QuotaExceededError' ||
-        e?.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
-        e?.code === 22 ||
-        e?.code === 1014
+        err?.name === 'QuotaExceededError' ||
+        err?.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+        err?.code === 22 ||
+        err?.code === 1014
       ) {
         console.warn('[safeStorage] Quota exceeded. Retaining in memory only.');
       }

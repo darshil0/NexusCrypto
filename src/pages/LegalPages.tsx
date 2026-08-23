@@ -96,7 +96,7 @@ export const LegalTermsPage: React.FC = () => {
         <section className="space-y-2">
           <h3 className="text-lg font-bold text-white">3. Disclaimer of Warranties</h3>
           <p>
-            The software is provided "AS IS", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability or fitness for a particular purpose.
+            The software is provided &ldquo;AS IS&rdquo;, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability or fitness for a particular purpose.
           </p>
         </section>
       </div>
@@ -122,7 +122,7 @@ export const LegalPrivacyPage: React.FC = () => {
         <section className="space-y-2">
           <h3 className="text-lg font-bold text-white">1. Local Browser Storage Only</h3>
           <p>
-            NexusCrypto stores your paper portfolio balances, active orders, transaction ledger, and UI preferences strictly in your web browser's local storage (`localStorage`). No user data is sent to or stored on external servers.
+            NexusCrypto stores your paper portfolio balances, active orders, transaction ledger, and UI preferences strictly in your web browser&apos;s local storage (`localStorage`). No user data is sent to or stored on external servers.
           </p>
         </section>
 

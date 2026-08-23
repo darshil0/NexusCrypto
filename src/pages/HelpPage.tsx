@@ -18,7 +18,7 @@ import { validateSupportTicket } from '../lib/errors/validation';
 export const HelpPage: React.FC = () => {
   const { submitSupportTicket } = useDemo();
   const [search, setSearch] = useState('');
-  const [openFaqId, setOpenFaqId] = useState<string | null>(FAQ_ITEMS[0].id);
+  const [openFaqId, setOpenFaqId] = useState<string | null>(FAQ_ITEMS[0]?.id ?? null);
 
   // Ticket Form State
   const [subject, setSubject] = useState('');
@@ -150,7 +150,7 @@ export const HelpPage: React.FC = () => {
               Ticket ID: <strong className="text-emerald-400">{submittedTicket.id}</strong>
             </div>
             <p className="text-xs text-slate-400 max-w-md mx-auto">
-              Our automated demo agent received your request: "{submittedTicket.subject}". Since this is a browser prototype, all operations remain local.
+              Our automated demo agent received your request: &ldquo;{submittedTicket.subject}&rdquo;. Since this is a browser prototype, all operations remain local.
             </p>
             <Button
               size="sm"

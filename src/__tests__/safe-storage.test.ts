@@ -26,7 +26,7 @@ describe('Safe Storage Engine', () => {
     const result = safeStorage.get(
       key,
       { valid: true },
-      (val: any) => typeof val === 'object' && val !== null && 'valid' in val
+      (val: unknown) => typeof val === 'object' && val !== null && 'valid' in (val as Record<string, unknown>)
     );
 
     expect(result).toEqual({ valid: true });
