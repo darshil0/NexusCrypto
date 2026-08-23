@@ -1,5 +1,5 @@
 {
-  "name": "react-example",
+  "name": "nexus-crypto",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -20,8 +20,7 @@
     "clsx": "^2.1.1",
     "lucide-react": "^0.546.0",
     "react": "^19.0.1",
-    "react-dom": "^19.0.1",
-    "vite": "^6.2.3"
+    "react-dom": "^19.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
