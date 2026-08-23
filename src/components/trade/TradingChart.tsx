@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { formatUSD, formatCompactNumber } from '../../utils/formatters';
 
 interface CandleData {
@@ -124,14 +124,14 @@ export const TradingChart: React.FC<TradingChartProps> = ({
 
   const maxVolume = Math.max(...candles.map((c) => c.volume)) || 1;
 
-  const getX = (index: number) => {
+  const getX = useCallback((index: number) => {
     const step = chartWidth / (candles.length - 1 || 1);
     return padding.left + index * step;
-  };
+  }, [chartWidth, candles.length, padding.left]);
 
-  const getY = (price: number) => {
+  const getY = useCallback((price: number) => {
     return padding.top + priceChartHeight - ((price - minPrice) / priceRange) * priceChartHeight;
-  };
+  }, [padding.top, priceChartHeight, minPrice, priceRange]);
 
   const getVolumeY = (vol: number) => {
     return padding.top + chartHeight - (vol / maxVolume) * volumeHeight;
@@ -142,7 +142,7 @@ export const TradingChart: React.FC<TradingChartProps> = ({
     return candles
       .map((c, i) => `${i === 0 ? 'M' : 'L'} ${getX(i).toFixed(1)} ${getY(c.close).toFixed(1)}`)
       .join(' ');
-  }, [candles, chartWidth, chartHeight, minPrice, priceRange]);
+  }, [candles, getX, getY]);
 
   const areaPath = useMemo(() => {
     if (candles.length === 0) return '';
@@ -150,7 +150,7 @@ export const TradingChart: React.FC<TradingChartProps> = ({
     const lastX = getX(candles.length - 1).toFixed(1);
     const bottomY = (padding.top + priceChartHeight).toFixed(1);
     return `${linePath} L ${lastX} ${bottomY} L ${firstX} ${bottomY} Z`;
-  }, [linePath, candles, chartWidth, priceChartHeight]);
+  }, [linePath, candles, getX, padding.top, priceChartHeight]);
 
   // MA Line Path
   const maPath = useMemo(() => {
@@ -162,7 +162,7 @@ export const TradingChart: React.FC<TradingChartProps> = ({
       path += `${path === '' ? 'M' : 'L'} ${x} ${y} `;
     });
     return path;
-  }, [maData, chartWidth, priceChartHeight]);
+  }, [maData, getX, getY]);
 
   const activeCandle = hoverIndex !== null ? candles[hoverIndex] : candles[candles.length - 1];
 

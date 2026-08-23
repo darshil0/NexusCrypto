@@ -93,7 +93,7 @@ export const RouterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     // Use history API for "clean" routes
     try {
       window.history.pushState(_state || {}, '', target);
-    } catch (e) {
+    } catch {
       // Fallback for environments where pushState may fail
       window.location.assign(target);
       return;

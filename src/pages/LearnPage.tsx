@@ -2,14 +2,10 @@ import React, { useState } from 'react';
 import { LEARN_ARTICLES, GLOSSARY_TERMS, QUIZ_QUESTIONS } from '../data/mockData';
 import { Link } from '../router/Router';
 import {
-  BookOpen,
-  HelpCircle,
   CheckCircle2,
   XCircle,
   Search,
   RotateCcw,
-  Sparkles,
-  ShieldCheck,
   ChevronRight,
   GraduationCap,
 } from 'lucide-react';
@@ -21,7 +17,7 @@ export const LearnPage: React.FC = () => {
   const [glossarySearch, setGlossarySearch] = useState<string>('');
 
   // Quiz State
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+  const [, setCurrentQuestionIndex] = useState<number>(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
   const [isQuizFinished, setIsQuizFinished] = useState<boolean>(false);
 

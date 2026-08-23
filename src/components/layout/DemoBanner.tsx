@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDemo } from '../../context/DemoContext';
 import { formatUSD } from '../../utils/formatters';
-import { ShieldCheck, RotateCcw, Sparkles } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 import { Link } from '../../router/Router';
 
 export const DemoBanner: React.FC = () => {

@@ -3,26 +3,16 @@ import { useDemo } from '../context/DemoContext';
 import { Link } from '../router/Router';
 import { formatUSD, formatPercent, formatCompactNumber } from '../utils/formatters';
 import {
-  TrendingUp,
   Activity,
-  ShieldCheck,
-  Zap,
   BookOpen,
   ArrowRight,
-  ShieldAlert,
   Wallet,
-  CheckCircle2,
   Lock,
-  Layers,
-  Sparkles,
-  BarChart3,
-  Cpu,
-  ChevronRight,
 } from 'lucide-react';
 import { Badge, Button, Card } from '../components/ui/BaseComponents';
 
 export const HomePage: React.FC = () => {
-  const { assets, portfolio } = useDemo();
+  const { assets } = useDemo();
 
   const featuredSymbols = ['BTC', 'ETH', 'SOL', 'USDC', 'XRP'];
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDemo } from '../context/DemoContext';
 import { Link } from '../router/Router';
-import { formatUSD, formatPercent, formatTimestamp } from '../utils/formatters';
+import { formatUSD, formatPercent } from '../utils/formatters';
 import {
   Star,
   Bell,
@@ -9,9 +9,6 @@ import {
   Trash2,
   TrendingUp,
   TrendingDown,
-  AlertCircle,
-  CheckCircle,
-  Activity,
 } from 'lucide-react';
 import { Badge, Button, Card } from '../components/ui/BaseComponents';
 import { InlineFieldError } from '../components/feedback/inline-field-error';

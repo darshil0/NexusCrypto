@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from '../../router/Router';
-import { Layers, ShieldAlert, AlertTriangle, ExternalLink, Heart } from 'lucide-react';
+import { ShieldAlert } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (

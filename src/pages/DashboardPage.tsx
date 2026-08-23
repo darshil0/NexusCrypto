@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDemo } from '../context/DemoContext';
-import { Link, useRouter } from '../router/Router';
+import { Link } from '../router/Router';
 import { formatUSD, formatPercent, formatCrypto, formatTimestamp } from '../utils/formatters';
 import {
   Wallet,
@@ -10,13 +10,8 @@ import {
   ArrowDownLeft,
   ArrowRightLeft,
   Activity,
-  PlusCircle,
   RotateCcw,
-  Sparkles,
-  ShieldCheck,
   Star,
-  ExternalLink,
-  ChevronRight,
   PieChart,
 } from 'lucide-react';
 import { Badge, Button, Card } from '../components/ui/BaseComponents';
@@ -25,13 +20,11 @@ import { MarketHeatmap } from '../components/dashboard/MarketHeatmap';
 export const DashboardPage: React.FC = () => {
   const {
     portfolio,
-    balances,
     assets,
     transactions,
     watchlist,
     resetDemoData,
   } = useDemo();
-  const { navigate } = useRouter();
 
   const isDailyPos = portfolio.dailyChangeUSD >= 0;
   const isPnlPos = portfolio.totalPnLUSD >= 0;

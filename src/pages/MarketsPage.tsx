@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useDemo } from '../context/DemoContext';
-import { Link, useRouter } from '../router/Router';
+import { Link } from '../router/Router';
 import { formatUSD, formatPercent, formatCompactNumber } from '../utils/formatters';
 import {
   Search,
@@ -8,15 +8,11 @@ import {
   TrendingUp,
   TrendingDown,
   ArrowUpDown,
-  Activity,
-  Layers,
-  Sparkles,
 } from 'lucide-react';
 import { Badge, Button, Card } from '../components/ui/BaseComponents';
 
 export const MarketsPage: React.FC = () => {
   const { assets, watchlist, toggleWatchlist } = useDemo();
-  const { navigate } = useRouter();
 
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState<string>('All');
@@ -39,8 +35,8 @@ export const MarketsPage: React.FC = () => {
       if (activeCategory === 'Top Losers') return asset.change24h < 0;
       return asset.category === activeCategory;
     }).sort((a, b) => {
-      let aVal = a[sortField] ?? 0;
-      let bVal = b[sortField] ?? 0;
+      const aVal = a[sortField] ?? 0;
+      const bVal = b[sortField] ?? 0;
 
       if (sortField === 'rank') {
         // Rank ascending is natural (1, 2, 3...)

@@ -3,7 +3,7 @@ import { useDemo } from '../../context/DemoContext';
 import { AssetSymbol, OrderSide, OrderType } from '../../types';
 import { formatUSD, formatCrypto } from '../../utils/formatters';
 import { calculateTradeFee, validateBalance } from '../../utils/calculations';
-import { AlertCircle, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { AlertCircle, ShieldAlert } from 'lucide-react';
 import { Button } from '../ui/BaseComponents';
 
 interface OrderFormProps {

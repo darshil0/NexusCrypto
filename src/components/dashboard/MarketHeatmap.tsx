@@ -6,15 +6,12 @@ import { useRouter } from '../../router/Router';
 import {
   TrendingUp,
   TrendingDown,
-  Activity,
   ArrowUpRight,
   Flame,
   Layers,
   LayoutGrid,
-  Filter,
   ArrowUpDown,
 } from 'lucide-react';
-import { Badge, Button } from '../ui/BaseComponents';
 
 type ViewMode = 'weighted' | 'grid';
 type SortOption = 'marketCap' | 'performance' | 'volume' | 'name';
@@ -130,7 +127,7 @@ export const MarketHeatmap: React.FC = () => {
   const [viewMode, setViewMode] = useState<ViewMode>('weighted');
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('All');
   const [sortBy, setSortBy] = useState<SortOption>('marketCap');
-  const [hoveredSymbol, setHoveredSymbol] = useState<string | null>(null);
+  const [, setHoveredSymbol] = useState<string | null>(null);
 
   // Convert assets record to array and filter/sort
   const assetList: CryptoAsset[] = useMemo(() => {
@@ -333,7 +330,7 @@ export const MarketHeatmap: React.FC = () => {
       {viewMode === 'weighted' ? (
         /* Weighted Bento Treemap Layout */
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 auto-rows-[140px]">
-          {filteredAssets.map((asset, index) => {
+          {filteredAssets.map((asset) => {
             const style = getHeatmapColorStyle(asset.change24h);
             const isPositive = asset.change24h >= 0;
 

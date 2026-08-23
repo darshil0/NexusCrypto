@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDemo } from '../context/DemoContext';
 import { useRouter, Link } from '../router/Router';
 import { formatUSD, formatPercent, formatCompactNumber, formatCrypto } from '../utils/formatters';
@@ -10,14 +10,8 @@ import {
   Star,
   Activity,
   ArrowLeft,
-  ShieldCheck,
   Zap,
-  Globe,
-  Layers,
-  Info,
-  Clock,
   ShieldAlert,
-  ArrowRightLeft,
 } from 'lucide-react';
 import { Badge, Button, Card } from '../components/ui/BaseComponents';
 
@@ -28,7 +22,6 @@ export const AssetDetailPage: React.FC = () => {
   const symbol = (params.symbol || 'BTC').toUpperCase();
   const asset = assets[symbol] || assets['BTC'];
 
-  const [activeTab, setActiveTab] = useState<'chart' | 'trade' | 'convert'>('chart');
 
   const isWatched = watchlist.includes(asset.symbol);
   const isPos = asset.change24h >= 0;

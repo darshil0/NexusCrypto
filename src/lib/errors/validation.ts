@@ -112,7 +112,7 @@ export function validateOrderNotional(
   return { isValid: true };
 }
 
-export function validateWithdrawalAddress(address: string, network = 'default'): ValidationResult {
+export function validateWithdrawalAddress(address: string): ValidationResult {
   const trimmed = address.trim();
   if (!trimmed) {
     return {

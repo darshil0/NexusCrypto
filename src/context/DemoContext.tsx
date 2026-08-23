@@ -11,7 +11,6 @@ import {
   SupportTicket,
   AssetSymbol,
   OrderSide,
-  OrderType,
 } from '../types';
 import {
   INITIAL_ASSETS,
@@ -29,7 +28,6 @@ import {
 import { formatUSD } from '../utils/formatters';
 
 import { safeStorage } from '../lib/errors/safe-storage';
-import { createAppError } from '../lib/errors/error-messages';
 import {
   validatePositiveNumber,
   validateWithdrawalAddress,
@@ -133,7 +131,7 @@ const STORAGE_KEYS = {
 
 export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [assets, setAssets] = useState<Record<string, CryptoAsset>>(INITIAL_ASSETS);
-  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [isProcessing] = useState<boolean>(false);
 
   const [balances, setBalances] = useState<Record<string, WalletBalance>>(() =>
     safeStorage.get(STORAGE_KEYS.BALANCES, INITIAL_BALANCES, (val: any) => typeof val === 'object' && val !== null && 'USD' in val)
@@ -293,7 +291,6 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const interval = setInterval(() => {
       setAssets((prevAssets) => {
         const next = { ...prevAssets };
-        const anyAlertTriggered = false;
 
         Object.keys(next).forEach((sym) => {
           const current = next[sym];
@@ -610,7 +607,7 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       return { success: true, orderId };
     },
-    [assets, balances, addToast, triggerConfetti]
+    [assets, addToast, triggerConfetti]
   );
 
   // Place Limit Order
@@ -719,7 +716,7 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       return { success: true, orderId };
     },
-    [assets, balances, addToast]
+    [assets, addToast]
   );
 
   // Cancel Order
@@ -848,7 +845,7 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       return { success: true };
     },
-    [assets, balances, addToast, triggerConfetti]
+    [assets, addToast, triggerConfetti]
   );
 
   // Deposit Simulation
@@ -917,7 +914,7 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const precisionValidation = validatePrecision(amount, asset === 'USD' ? 2 : 8);
       if (!precisionValidation.isValid) return { success: false, error: precisionValidation.errorMessage };
 
-      const addressValidation = validateWithdrawalAddress(address, network);
+      const addressValidation = validateWithdrawalAddress(address);
       if (!addressValidation.isValid) return { success: false, error: addressValidation.errorMessage };
 
       const fee = asset === 'USD' ? 5.00 : asset === 'BTC' ? 0.0002 : asset === 'ETH' ? 0.002 : 0.01;
@@ -984,7 +981,7 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       return { success: true };
     },
-    [assets, balances, addToast]
+    [assets, addToast]
   );
 
   // Watchlist Toggle
@@ -1083,6 +1080,7 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Reset Demo Data
   const resetDemoData = useCallback(() => {
+    safeStorage.clear();
     setBalances(INITIAL_BALANCES);
     setOrders(INITIAL_ORDERS);
     setTransactions(INITIAL_TRANSACTIONS);

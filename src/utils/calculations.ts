@@ -1,4 +1,4 @@
-import { AssetSymbol, CryptoAsset, WalletBalance } from '../types';
+import { CryptoAsset, WalletBalance } from '../types';
 
 export const SIMULATED_FEE_RATE = 0.001; // 0.1% simulated trading fee
 

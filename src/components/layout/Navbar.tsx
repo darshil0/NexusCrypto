@@ -15,16 +15,13 @@ import {
   Menu,
   X,
   Search,
-  Check,
-  Shield,
   Layers,
   ArrowRightLeft,
   LayoutDashboard,
 } from 'lucide-react';
-import { Badge, Button } from '../ui/BaseComponents';
+import { Badge } from '../ui/BaseComponents';
 
 export const Navbar: React.FC = () => {
-  const { path } = useRouter();
   const {
     assets,
     notifications,

@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { DemoProvider } from './context/DemoContext';
-import { Router, Route, Switch, useRouter, Link } from './router/Router';
+import { Router, Route, Switch, useRouter } from './router/Router';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { DemoBanner, MobileNav } from './components/layout/DemoBanner';

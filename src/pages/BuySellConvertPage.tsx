@@ -1,19 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useDemo } from '../context/DemoContext';
 import { useRouter } from '../router/Router';
-import { formatUSD, formatCrypto, formatPercent } from '../utils/formatters';
+import { formatUSD, formatCrypto } from '../utils/formatters';
 import { calculateConvertQuote, validateBalance } from '../utils/calculations';
 import {
-  ArrowRightLeft,
   ArrowDown,
   CheckCircle2,
   AlertCircle,
-  ShieldCheck,
-  Zap,
-  RotateCcw,
-  Sparkles,
-  Layers,
-  ChevronDown,
 } from 'lucide-react';
 import { Badge, Button, Card, Modal } from '../components/ui/BaseComponents';
 
@@ -21,7 +14,7 @@ export const BuySellConvertPage: React.FC<{ initialMode?: 'buy' | 'sell' | 'conv
   initialMode = 'buy',
 }) => {
   const { path } = useRouter();
-  const { assets, balances, executeMarketTrade, executeConvert, resetDemoData } = useDemo();
+  const { assets, balances, executeConvert } = useDemo();
 
   // Determine mode from route path if rendered for /buy, /sell, or /convert
   const defaultTab = path.includes('/sell')
